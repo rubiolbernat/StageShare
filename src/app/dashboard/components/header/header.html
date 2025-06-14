@@ -1,0 +1,60 @@
+<header style="padding: 1rem; background-color: #2c3e50; color: white; text-align: center;">
+    <h1>Benvingut al Panell de Control</h1><button onclick="toggleMode()">🌞 / 🌙</button>
+  </header>
+ <script>
+    function toggleMode() {
+      document.body.classList.toggle('light');
+    }
+
+    // Funció per controlar el submenú
+    function toggleSubmenu(button) {
+      const submenu = button.querySelector('.submenu');
+      const arrow = button.querySelector('.submenu-arrow');
+
+      // Toggle de l'estat obert/tancat
+      submenu.classList.toggle('open');
+
+      // Rotació de la fletxa
+      if (submenu.classList.contains('open')) {
+        arrow.style.transform = 'rotate(90deg)';
+      } else {
+        arrow.style.transform = 'rotate(0deg)';
+      }
+
+      // Aturar la propagació per evitar conflictes
+      event.stopPropagation();
+    }
+
+    // Tancar submenú quan es col·lapsa el menú principal
+    document.getElementById('nav-toggle').addEventListener('change', function() {
+      if (this.checked) {
+        const openSubmenus = document.querySelectorAll('.submenu.open');
+        openSubmenus.forEach(submenu => {
+          submenu.classList.remove('open');
+          const arrow = submenu.parentElement.querySelector('.submenu-arrow');
+          if (arrow) arrow.style.transform = 'rotate(0deg)';
+        });
+      }
+    });
+
+    // Controlar hover quan el menú està expandit
+    document.addEventListener('DOMContentLoaded', function() {
+      const navContent = document.getElementById('nav-content');
+      const navToggle = document.getElementById('nav-toggle');
+
+      navContent.addEventListener('mouseover', function(e) {
+        if (navToggle.checked) return; // No fer res si el menú està col·lapsat
+
+        const navButton = e.target.closest('.nav-button');
+        if (navButton) {
+          const allButtons = Array.from(document.querySelectorAll('.nav-button'));
+          const index = allButtons.indexOf(navButton);
+          const highlight = document.getElementById('nav-content-highlight');
+
+          if (index >= 0 && highlight) {
+            highlight.style.top = `${(index * 54) + 16}px`;
+          }
+        }
+      });
+    });
+  </script>

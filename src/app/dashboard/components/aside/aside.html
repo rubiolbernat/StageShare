@@ -1,0 +1,210 @@
+<aside>
+  <div id="nav-bar">
+    <input type="checkbox" id="nav-toggle" />
+    <div id="nav-header">
+      <img src="Stage-Share.png" height="50px" />
+      <a id="nav-title" href="https://codepen.io" target="_blank">
+        STAGE sgz
+      </a>
+      <label for="nav-toggle">
+        <span id="nav-toggle-burger"></span>
+      </label>
+      <hr />
+    </div>
+
+    <div id="nav-content">
+      <!-- Botons del menú principal -->
+      <div class="nav-button">
+        <i class="fas"
+          ><svg
+            class="w-6 h-6 text-gray-800 dark:text-white"
+            aria-hidden="true"
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            fill="none"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M4 13h3.439a.991.991 0 0 1 .908.6 3.978 3.978 0 0 0 7.306 0 .99.99 0 0 1 .908-.6H20M4 13v6a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-6M4 13l2-9h12l2 9M9 7h6m-7 3h8"
+            />
+          </svg> </i
+        ><span>Dashboard</span>
+      </div>
+      <hr />
+      <div class="nav-button">
+        <i class="fas"
+          ><svg
+            class="w-6 h-6 text-gray-800 dark:text-white"
+            aria-hidden="true"
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            fill="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              d="M17.5 3a3.5 3.5 0 0 0-3.456 4.06L8.143 9.704a3.5 3.5 0 1 0-.01 4.6l5.91 2.65a3.5 3.5 0 1 0 .863-1.805l-5.94-2.662a3.53 3.53 0 0 0 .002-.961l5.948-2.667A3.5 3.5 0 1 0 17.5 3Z"
+            />
+          </svg> </i
+        ><span>Stages</span>
+      </div>
+      <div class="nav-button">
+        <i class="fas"
+          ><svg
+            class="w-6 h-6 text-gray-800 dark:text-white"
+            aria-hidden="true"
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            fill="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              d="M8 5v4.997a.31.31 0 0 1-.068.113c-.08.098-.213.207-.378.301-.947.543-1.713 1.54-2.191 2.488A6.237 6.237 0 0 0 4.82 14.4c-.1.48-.138 1.031.018 1.539C5.12 16.846 6.02 17 6.414 17H11v3a1 1 0 1 0 2 0v-3h4.586c.395 0 1.295-.154 1.575-1.061.156-.508.118-1.059.017-1.539a6.241 6.241 0 0 0-.541-1.5c-.479-.95-1.244-1.946-2.191-2.489a1.393 1.393 0 0 1-.378-.301.309.309 0 0 1-.068-.113V5h1a1 1 0 1 0 0-2H7a1 1 0 1 0 0 2h1Z"
+            />
+          </svg> </i
+        ><span>My favourite</span>
+      </div>
+      <hr />
+      <div class="submenu-container" (click)="toggleSubmenu($event)">
+        <div class="nav-button submenu-button">
+          <i class="fas"
+            ><svg
+              class="w-6 h-6 text-gray-800 dark:text-white"
+              aria-hidden="true"
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              fill="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M10.83 5a3.001 3.001 0 0 0-5.66 0H4a1 1 0 1 0 0 2h1.17a3.001 3.001 0 0 0 5.66 0H20a1 1 0 1 0 0-2h-9.17ZM4 11h9.17a3.001 3.001 0 0 1 5.66 0H20a1 1 0 1 1 0 2h-1.17a3.001 3.001 0 0 1-5.66 0H4a1 1 0 1 1 0-2Zm1.17 6H4a1 1 0 1 0 0 2h1.17a3.001 3.001 0 0 0 5.66 0H20a1 1 0 1 0 0-2h-9.17a3.001 3.001 0 0 0-5.66 0Z"
+              />
+            </svg>
+          </i>
+          <span>Estadístiques</span>
+          <span class="submenu-arrow">
+            <svg aria-hidden="true" fill="none" viewBox="0 0 24 24">
+              <path
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="m9 5 7 7-7 7"
+              />
+            </svg>
+          </span>
+        </div>
+        <div class="submenu">
+          <a href="#" class="nav-subbutton">Vendes</a>
+          <a href="#" class="nav-subbutton">Usuaris</a>
+          <a href="#" class="nav-subbutton">Visites</a>
+        </div>
+      </div>
+
+      <div class="nav-button">
+        <i class="fas fa-fire"></i><span>Trending</span>
+      </div>
+      <div class="nav-button">
+        <i class="fas fa-magic"></i><span>Challenges</span>
+      </div>
+      <div class="nav-button">
+        <i class="fas fa-fire"></i><span>Trending</span>
+      </div>
+      <div class="nav-button">
+        <i class="fas fa-magic"></i><span>Challenges</span>
+      </div>
+      <div class="nav-button"><i class="fas fa-gem"></i><span>Spark</span></div>
+      <hr />
+      <div class="nav-button">
+        <i class="fas fa-cogs"></i><span>Codepen Pro</span>
+      </div>
+      <div id="nav-content-highlight"></div>
+      <div class="submenu-container" (click)="toggleSubmenu($event)">
+        <div class="nav-button submenu-button">
+          <i class="fas"
+            ><svg
+              class="w-6 h-6 text-gray-800 dark:text-white"
+              aria-hidden="true"
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              fill="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M10.83 5a3.001 3.001 0 0 0-5.66 0H4a1 1 0 1 0 0 2h1.17a3.001 3.001 0 0 0 5.66 0H20a1 1 0 1 0 0-2h-9.17ZM4 11h9.17a3.001 3.001 0 0 1 5.66 0H20a1 1 0 1 1 0 2h-1.17a3.001 3.001 0 0 1-5.66 0H4a1 1 0 1 1 0-2Zm1.17 6H4a1 1 0 1 0 0 2h1.17a3.001 3.001 0 0 0 5.66 0H20a1 1 0 1 0 0-2h-9.17a3.001 3.001 0 0 0-5.66 0Z"
+              />
+            </svg>
+          </i>
+          <span>Estadístiques</span>
+          <span class="submenu-arrow">
+            <svg aria-hidden="true" fill="none" viewBox="0 0 24 24">
+              <path
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="m9 5 7 7-7 7"
+              />
+            </svg>
+          </span>
+        </div>
+        <div class="submenu">
+          <a href="#" class="nav-subbutton">Vendes</a>
+          <a href="#" class="nav-subbutton">Usuaris</a>
+          <a href="#" class="nav-subbutton">Visites</a>
+        </div>
+      </div>
+    </div>
+
+    <input type="checkbox" id="nav-footer-toggle" />
+    <div id="nav-footer">
+      <div id="nav-footer-heading">
+        <div id="nav-footer-avatar">
+          <img
+            src="https://gravatar.com/avatar/4474ca42d303761c2901fa819c4f2547"
+          />
+        </div>
+        <div id="nav-footer-titlebox">
+          <a
+            id="nav-footer-title"
+            href="https://codepen.io/uahnbu/pens/public"
+            target="_blank"
+            >uahnbu</a
+          >
+          <span id="nav-footer-subtitle">Admin</span>
+        </div>
+        <label for="nav-footer-toggle">
+          <i class="fas"
+            ><svg
+              class="w-6 h-6 text-gray-800 dark:text-white"
+              aria-hidden="true"
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              fill="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M5.575 13.729C4.501 15.033 5.43 17 7.12 17h9.762c1.69 0 2.618-1.967 1.544-3.271l-4.881-5.927a2 2 0 0 0-3.088 0l-4.88 5.927Z"
+                clip-rule="evenodd"
+              />
+            </svg>
+          </i>
+        </label>
+      </div>
+      <div id="nav-footer-content">
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+        tempor incididunt ut labore et dolore magna aliqua.
+      </div>
+    </div>
+  </div>
+</aside>
