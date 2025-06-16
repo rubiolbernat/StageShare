@@ -1,0 +1,15 @@
+.content-wrapper {
+  margin-left: var(--aside-collapsed-width);
+  transition: var(--transition);
+  flex: 1;
+}
+
+.aside-expanded {
+  margin-left: var(--aside-width) !important;
+}
+
+@media (max-width: 768px) {
+  .content-wrapper {
+    margin-left: 0 !important;
+  }
+}

@@ -1,443 +1,690 @@
-:host {
-  /* valors per defecte (dark mode) */
-  --background: #9c88ff;
-  --navbar-width: 256px;
-  --navbar-width-min: 80px;
-  --navbar-dark-primary: #18283b;
-  --navbar-dark-secondary: #2c3e50;
-  --navbar-light-primary: #f5f6fa;
-  --navbar-light-secondary: #8392a5;
+:root {
+  --primary-color: #4a6bdf;
+  --secondary-color: #f5f7fa;
+  --text-color: #333;
+  --text-light: #777;
+  --bg-color: #fff;
+  --aside-bg: #2c3e50;
+  --aside-text: #ecf0f1;
+  --aside-width: 250px;
+  --aside-collapsed-width: 80px;
+  --header-height: 70px;
+  --shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  --transition: all 0.3s ease;
 }
 
-body.light {
-  --background: #ecf0f1;
-  --navbar-dark-primary: #ffffff;
-  --navbar-dark-secondary: #dcdde1;
-  --navbar-light-primary: #2c3e50;
-  --navbar-light-secondary: #636e72;
+.dark-mode {
+  --primary-color: #5d78ff;
+  --secondary-color: #2d3748;
+  --text-color: #f8f9fa;
+  --text-light: #adb5bd;
+  --bg-color: #1a202c;
+  --aside-bg: #1a202c;
+  --aside-text: #e2e8f0;
+  --shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
 }
 
-html,
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
 body {
-  margin: 0;
-  background: var(--background);
-}
-
-#nav-toggle:checked~#nav-header {
-  width: calc(var(--navbar-width-min) - 16px);
-}
-
-#nav-toggle:checked~#nav-content,
-#nav-toggle:checked~#nav-footer {
-  width: var(--navbar-width-min);
-}
-
-#nav-toggle:checked~#nav-header #nav-title {
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.1s;
-}
-
-#nav-toggle:checked~#nav-header label[for="nav-toggle"] {
-  left: calc(50% - 8px);
-  transform: translate(-50%);
-}
-
-#nav-toggle:checked~#nav-header #nav-toggle-burger {
-  background: var(--navbar-light-primary);
-}
-
-#nav-toggle:checked~#nav-header #nav-toggle-burger:before,
-#nav-toggle:checked~#nav-header #nav-toggle-burger::after {
-  width: 16px;
-  background: var(--navbar-light-secondary);
-  transform: translate(0, 0) rotate(0deg);
-}
-
-#nav-toggle:checked~#nav-content .nav-button span {
-  opacity: 0;
-  transition: opacity 0.1s;
-}
-
-#nav-toggle:checked~#nav-content .nav-button .fas,
-#nav-toggle:checked~#nav-content .nav-button .submenu-arrow {
-  min-width: calc(100% - 16px);
-}
-
-#nav-toggle:checked~#nav-footer #nav-footer-avatar {
-  margin-left: 0;
-  left: 50%;
-  transform: translate(-50%);
-}
-
-#nav-toggle:checked~#nav-footer #nav-footer-titlebox,
-#nav-toggle:checked~#nav-footer label[for="nav-footer-toggle"] {
-  opacity: 0;
-  transition: opacity 0.1s;
-  pointer-events: none;
-}
-
-#nav-bar {
-  position: fixed;
-  top: 0;
-  left: 0;
-  height: 100vh;
-  background: var(--navbar-dark-primary);
-  display: flex;
-  flex-direction: column;
-  color: var(--navbar-light-primary);
-  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  transition: var(--transition);
   overflow: hidden;
-  user-select: none;
-  z-index: 1000;
 }
 
-#nav-bar hr {
-  margin: 0;
+.app-container {
+  display: flex;
+  min-height: 100vh;
+  transition: var(--transition);
   position: relative;
-  left: 16px;
-  width: calc(100% - 32px);
-  border: none;
-  border-top: solid 1px var(--navbar-dark-secondary);
 }
 
-#nav-bar a {
-  color: inherit;
-  text-decoration: inherit;
+/* Aside Menu - Versió final amb submenús */
+aside {
+  width: var(--aside-collapsed-width);
+  background-color: var(--aside-bg);
+  color: var(--aside-text);
+  height: 100vh;
+  position: fixed;
+  transition: var(--transition);
+  z-index: 100;
+  overflow: hidden;
+  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
 }
 
-#nav-bar input[type="checkbox"] {
+aside.expanded {
+  width: var(--aside-width);
+}
+
+aside.expanded .menu-text,
+aside.expanded .logo-text,
+aside.expanded .menu-arrow {
+  display: inline-block;
+}
+
+aside.expanded .menu-item {
+  justify-content: flex-start;
+}
+
+/* Hover effect - Flota sobre el contingut */
+aside:not(.expanded):hover {
+  width: var(--aside-width);
+  box-shadow: 5px 0 15px rgba(0, 0, 0, 0.2);
+  z-index: 101;
+}
+
+aside:not(.expanded):hover .menu-text,
+aside:not(.expanded):hover .logo-text,
+aside:not(.expanded):hover .menu-arrow {
+  display: inline-block;
+}
+
+aside:not(.expanded):hover .menu-item {
+  justify-content: flex-start;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  padding: 20px;
+  height: var(--header-height);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  white-space: nowrap;
+}
+
+.logo-icon {
+  font-size: 24px;
+  margin-right: 10px;
+  color: var(--primary-color);
+  flex-shrink: 0;
+}
+
+.logo-text {
+  font-size: 18px;
+  font-weight: bold;
+  transition: var(--transition);
+  display: none;
+  white-space: nowrap;
+}
+
+.menu {
+  padding: 20px 0;
+  overflow-y: auto;
+  height: calc(100vh - var(--header-height));
+}
+
+/* ... el teu codi anterior ... */
+
+.menu-item {
+  display: flex;
+  /* align-items: center;  <-- COMENTA O ELIMINA AQUESTA LÍNIA */
+
+  /* AFEGEIX AQUESTES DUES LÍNIES */
+  flex-wrap: wrap;
+  align-items: flex-start; /* Alinea els items al principi */
+
+  /* La resta de les teves propietats es queden igual */
+  padding: 12px 20px;
+  cursor: pointer;
+  transition: var(--transition);
+  border-left: 3px solid transparent;
+  white-space: nowrap;
+  position: relative;
+}
+
+/* ... la resta del teu codi es manté intacte ... */
+
+.menu-item:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.menu-item.active {
+  background-color: rgba(255, 255, 255, 0.1);
+  border-left: 3px solid var(--primary-color);
+}
+
+.menu-icon {
+  font-size: 18px;
+  margin-right: 15px;
+  flex-shrink: 0;
+}
+
+.menu-text {
+  font-size: 14px;
+  transition: var(--transition);
+  display: none;
+  flex-grow: 1;
+}
+
+.menu-arrow {
+  font-size: 12px;
+  transition: var(--transition);
   display: none;
 }
 
-#nav-header {
-  position: relative;
-  left: 16px;
-  width: calc(var(--navbar-width) - 16px);
-  min-height: 80px;
-  background: var(--navbar-dark-primary);
-  border-radius: 16px;
-  z-index: 2;
-  display: flex;
-  align-items: center;
-  transition: width 0.2s;
+.menu-item.expanded .menu-arrow {
+  transform: rotate(90deg);
 }
 
-#nav-header hr {
+.submenu {
+    max-height: 0;
+    overflow: hidden;
+    /* Fem la transició més suau i que també afecti al padding */
+    transition: max-height 0.3s ease-in-out, padding 0.3s ease-in-out;
+    background-color: rgba(0, 0, 0, 0.2); /* Fons una mica més fosc per crear profunditat */
+    /* Comença sense padding vertical. El padding esquerre ja indenta el bloc sencer */
+    padding: 0 0px 0 30px;
+    margin-right: -20px;
+    width: 100%;
+    border-radius: 0px 0px 16px 16px;
+}
+
+.menu-item.expanded .submenu {
+  max-height: 500px;
+}
+
+.submenu-item {
+    /* Eliminem el padding gegant i el fem uniforme */
+    padding: 10px 15px;
+    cursor: pointer;
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    border-radius: 5px; /* Vores arrodonides! */
+    transition: all 0.2s ease; /* Transició suau per a tot */
+    margin-bottom: 2px; /* Petita separació entre ells */
+}
+.menu-item.expanded .submenu {
+    max-height: 500px; /* Això es manté igual */
+    /* En expandir-se, afegim el padding vertical */
+    padding: 10px 15px 10px 30px;
+    margin-top: 5px; /* Petita separació de l'element pare */
+    margin-bottom: 5px;
+}
+
+.submenu-item:hover {
+    /* Un efecte hover més subtil */
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.submenu-item.active {
+    /* L'actiu ara és molt més visual */
+    background-color: var(--primary-color);
+    color: white;
+    font-weight: 500;
+}
+
+/* Important: quan l'ítem està actiu, la icona també ha de ser blanca */
+.submenu-item.active .submenu-icon {
+    color: white;
+}
+
+.submenu-icon {
+  margin-right: 10px;
+  font-size: 12px;
+}
+
+.toggle-btn {
   position: absolute;
-  bottom: 0;
-}
-
-#nav-title {
-  font-size: 1.5rem;
-  transition: opacity 1s;
-}
-
-label[for="nav-toggle"] {
-  position: absolute;
-  right: 0;
-  width: 3rem;
-  height: 100%;
+  right: -15px;
+  top: 20px;
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
+  box-shadow: var(--shadow);
+  z-index: 101;
+  transition: var(--transition);
 }
 
-#nav-toggle-burger {
-  position: relative;
-  width: 16px;
-  height: 2px;
-  background: var(--navbar-dark-primary);
-  border-radius: 99px;
-  transition: background 0.2s;
+.toggle-btn:hover {
+  transform: scale(1.1);
 }
 
-#nav-toggle-burger:before,
-#nav-toggle-burger:after {
-  content: '';
-  position: absolute;
-  width: 10px;
-  height: 2px;
-  background: var(--navbar-light-primary);
-  border-radius: 99px;
-  transition: 0.2s;
-}
-
-#nav-toggle-burger:before {
-  top: -6px;
-  transform: translate(2px, 8px) rotate(30deg);
-}
-
-#nav-toggle-burger:after {
-  top: 6px;
-  transform: translate(2px, -8px) rotate(-30deg);
-}
-
-#nav-content {
-  margin: -16px 0;
-  padding: 16px 0;
-  position: relative;
+/* Main Content */
+main {
   flex: 1;
-  width: var(--navbar-width);
-  background: var(--navbar-dark-primary);
-  box-shadow: 0 0 0 16px var(--navbar-dark-primary);
-  direction: rtl;
-  overflow-x: hidden;
-  transition: width 0.2s;
+  margin-left: var(--aside-collapsed-width);
+  transition: var(--transition);
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
 }
 
-#nav-content::-webkit-scrollbar {
+aside.expanded+main {
+  margin-left: var(--aside-width);
+}
+
+/* Header */
+header {
+  height: var(--header-height);
+  background-color: var(--bg-color);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 20px;
+  box-shadow: var(--shadow);
+  position: sticky;
+  top: 0;
+  z-index: 99;
+  flex-shrink: 0;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  flex-grow: 1;
+  /* Permet que ocupi l'espai disponible */
+  min-width: 0;
+  max-width: 80%;
+  /* Important per al flexbox */
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex-shrink: 0;
+  /* Evita que s'encongeixi */
+}
+
+.header-icon {
+  font-size: 20px;
+  cursor: pointer;
+  color: var(--text-light);
+  transition: var(--transition);
+  position: relative;
+}
+
+.header-icon:hover {
+  color: var(--primary-color);
+}
+
+.notifications-count {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  background-color: #e74c3c;
+  color: white;
+  border-radius: 50%;
+  width: 18px;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+}
+
+.profile {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  position: relative;
+}
+
+.profile-img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-right: 10px;
+}
+
+.profile-name {
+  font-size: 14px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.profile-dropdown {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background-color: var(--bg-color);
+  border-radius: 5px;
+  box-shadow: var(--shadow);
+  padding: 10px 0;
+  width: 200px;
+  display: none;
+  z-index: 100;
+}
+
+.profile:hover .profile-dropdown {
+  display: block;
+}
+
+.dropdown-item {
+  padding: 10px 20px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.dropdown-item:hover {
+  background-color: var(--secondary-color);
+}
+
+/* Tabs - Versió final amb creus i indicadors */
+.tabs-container {
+  overflow-x: auto;
+  white-space: nowrap;
+  /*scrollbar-width: none;*/
+  flex-grow: 1;
+  padding-bottom: 5px;
+  scroll-behavior: smooth;
+  /* NOU: Perquè el desplaçament amb JS sigui suau */
+}
+
+/* --- ESTILS PER A UNA BARRA DE SCROLL FINA I MINIMALISTA --- */
+
+/* Per a Chrome, Safari, Edge, etc. */
+.tabs-container::-webkit-scrollbar {
+    height: 5px;  /* AQUEST ÉS EL GRUIX DE LA BARRA. Pots posar 3px, 4px, etc. */
+}
+
+.tabs-container::-webkit-scrollbar-track {
+    background: transparent; /* El fons de la barra serà transparent */
+}
+
+.tabs-container::-webkit-scrollbar-thumb {
+    background-color: #cccccc; /* El color de la línia que es mou */
+    border-radius: 10px;       /* Fa les vores de la línia arrodonides */
+}
+
+.tabs-container::-webkit-scrollbar-button {
+    display: none; /* AQUESTA LÍNIA AMAGA LES FLETXES DELS EXTREMS */
+}
+
+/* Per a Firefox */
+.tabs-container {
+    /* ... les altres propietats que ja tenies (overflow-x, etc.) ... */
+    scrollbar-width: thin; /* Això fa que Firefox mostri una barra fina */
+    scrollbar-color: #cccccc transparent; /* Color de la barra i del fons */
+}
+
+.tabs {
+  display: inline-flex;
+  gap: 5px;
+  padding: 10px 5px;
+  padding-bottom:0;
+}
+
+.tab {
+  padding: 8px 15px 8px 12px;
+  background-color: var(--secondary-color);
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: var(--transition);
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+.tab.active {
+  background-color: var(--primary-color);
+  color: white;
+}
+
+.tab:hover:not(.active) {
+  background-color: rgba(74, 107, 223, 0.1);
+}
+
+.tab-close {
+  margin-left: 8px;
+  font-size: 12px;
+  opacity: 0.7;
+  transition: var(--transition);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+}
+
+.tab-close:hover {
+  opacity: 1;
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+.tab.active .tab-close:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+.tab-unsaved {
+  position: absolute;
+  top: 4px;
+  right: 4px;
   width: 8px;
   height: 8px;
-}
-
-#nav-content::-webkit-scrollbar-thumb {
-  border-radius: 99px;
-  background-color: red;
-}
-
-#nav-content-highlight {
-  position: absolute;
-  left: 16px;
-  top: -70px;
-  width: calc(100% - 16px);
-  height: 54px;
-  background: var(--background);
-  background-attachment: fixed;
-  border-radius: 16px 0 0 16px;
-  transition: top 0.2s;
-  z-index: 1;
-}
-
-#nav-content-highlight:before,
-#nav-content-highlight:after {
-  content: '';
-  position: absolute;
-  right: 0;
-  width: 32px;
-  height: 32px;
+  background-color: #e74c3c;
   border-radius: 50%;
-}
-
-#nav-content-highlight:before {
-  bottom: 100%;
-  box-shadow: 16px 16px var(--background);
-}
-
-#nav-content-highlight:after {
-  top: 100%;
-  box-shadow: 16px -16px var(--background);
-}
-
-.nav-button {
-  position: relative;
-  margin-left: 16px;
-  height: 54px;
-  display: flex;
-  align-items: center;
-  color: var(--navbar-light-secondary);
-  direction: ltr;
-  cursor: pointer;
-  z-index: 2;
-  transition: color 0.2s;
-}
-
-.nav-button span {
-  transition: opacity 1s;
-}
-
-.nav-button .fas {
-  transition: min-width 0.2s;
-}
-
-/* LÒGICA DEL HIGHLIGHT CORREGIDA */
-#nav-content>.nav-button:nth-child(1):hover~#nav-content-highlight {
-  top: 16px;
-}
-
-#nav-content>.nav-button:nth-child(2):hover~#nav-content-highlight {
-  top: calc(54px + 16px);
-}
-
-#nav-content>.nav-button:nth-child(3):hover~#nav-content-highlight {
-  top: calc(2 * 54px + 16px);
-}
-
-#nav-content>.nav-button:nth-child(4):hover~#nav-content-highlight {
-  top: calc(3 * 54px + 16px);
-}
-
-#nav-content>.nav-button:nth-child(6):hover~#nav-content-highlight {
-  top: calc(4 * 54px + 16px);
-}
-
-#nav-content>.nav-button:nth-child(7):hover~#nav-content-highlight {
-  top: calc(5 * 54px + 16px);
-}
-
-#nav-content>.nav-button:nth-child(8):hover~#nav-content-highlight {
-  top: calc(6 * 54px + 16px);
-}
-
-#nav-content>.nav-button:nth-child(10):hover~#nav-content-highlight {
-  top: calc(7 * 54px + 16px);
-}
-
-.nav-button:hover {
-  color: var(--navbar-light-primary) !important;
-}
-
-#nav-bar .fas {
-  min-width: 3rem;
-  text-align: center;
-}
-
-#nav-footer {
-  position: relative;
-  width: var(--navbar-width);
-  height: 54px;
-  background: var(--navbar-dark-secondary);
-  border-radius: 16px 16px 0px 0px;
-  display: flex;
-  flex-direction: column;
-  z-index: 2;
-  transition: width 0.2s, height 0.2s;
-}
-
-#nav-footer-heading {
-  position: relative;
-  width: 100%;
-  height: 54px;
-  display: flex;
-  align-items: center;
-}
-
-#nav-footer-avatar {
-  position: relative;
-  margin: 11px 0 11px 16px;
-  left: 0;
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  overflow: hidden;
-  transform: translate(0);
-  transition: 0.2s;
-}
-
-#nav-footer-avatar img {
-  height: 100%;
-}
-
-#nav-footer-titlebox {
-  position: relative;
-  margin-left: 16px;
-  width: 10px;
-  display: flex;
-  flex-direction: column;
-  transition: opacity 1s;
-}
-
-#nav-footer-subtitle {
-  color: var(--navbar-light-secondary);
-  font-size: 0.6rem;
-}
-
-#nav-toggle:not(:checked)~#nav-footer-toggle:checked+#nav-footer {
-  height: 30%;
-  min-height: 54px;
-}
-
-#nav-toggle:not(:checked)~#nav-footer-toggle:checked+#nav-footer label[for="nav-footer-toggle"] {
-  transform: rotate(180deg);
-}
-
-label[for="nav-footer-toggle"] {
-  position: absolute;
-  right: 0;
-  width: 3rem;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  cursor: pointer;
-  transition: transform 0.2s, opacity 0.2s;
-}
-
-#nav-footer-content {
-  margin: 0 16px 16px 16px;
-  border-top: solid 1px var(--navbar-light-secondary);
-  padding: 16px 0;
-  color: var(--navbar-light-secondary);
-  font-size: 0.8rem;
-  overflow: auto;
-}
-
-/* ESTILS DEL SUBMENÚ MILLORAT */
-/* Contenidor amb submenu */
-.submenu-container {
-  flex-direction: column;
-  display: flex;
-  position: relative;
-  height: fit-content;
-}
-
-/* Fletxa alineada al final */
-.submenu-arrow {
-  margin-left: auto;
-  transition: transform 0.25s ease;
-  width: 24px;
-  height: 24px;
-}
-
-.submenu-button{
-  display: flex;
-}
-
-.submenu-arrow svg {
-  display: block; /* o inline-block també pot servir */
-  width: 24px;
-  height: 24px;
-}
-
-
-/* Submenu ocult per defecte */
-.submenu {
-  overflow: hidden;
-  max-height: 0;
-  transition: max-height 0.3s ease;
-  background-color: var(--navbar-dark-secondary);
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  border-radius: 0px 0px 16px 16px;
-}
-
-/* Submenu obert */
-.submenu.open {
-  max-height: 500px;
-}
-
-/* Botons del submenu */
-.nav-subbutton {
-  padding: 0 16px 0 64px;
-  height: 48px;
-  line-height: 48px;
-  color: var(--navbar-light-secondary);
-  text-decoration: none;
-}
-
-.nav-subbutton:hover {
-  background: rgba(0, 0, 0, 0.1);
-  color: var(--navbar-light-primary);
-}
-
-
-/* Quan el menú està col·lapsat */
-#nav-toggle:checked~#nav-content .submenu {
   display: none;
 }
 
-#nav-toggle:checked~#nav-content .submenu.open {
+.tab.unsaved .tab-unsaved {
   display: block;
-  max-height: none;
+}
+
+/* NOU: Estils per a les fletxes de scroll dels tabs */
+.tabs-wrapper {
+  position: relative;
+  flex-grow: 1;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+}
+
+.scroll-arrow {
+  background-color: var(--bg-color);
+  border: none;
+  color: var(--text-light);
+  cursor: pointer;
+  padding: 0 10px;
+  font-size: 14px;
+  height: calc(100% - 10px);
+  /* Alineat amb els tabs */
+  position: absolute;
+  top: 5px;
+  /* Alineat amb els tabs */
+  z-index: 10;
+  display: none;
+  /* Amagades per defecte */
+  align-items: center;
+  transition: var(--transition);
+}
+
+.scroll-arrow:hover {
+  color: var(--primary-color);
+}
+
+.scroll-arrow.left {
+  left: 0;
+  background: linear-gradient(to right, var(--bg-color) 70%, transparent);
+}
+
+.scroll-arrow.right {
+  right: 0;
+  background: linear-gradient(to left, var(--bg-color) 70%, transparent);
+}
+
+/* Content */
+.content {
+  padding: 20px;
+  overflow-y: auto;
+  flex-grow: 1;
+  height: calc(100vh - var(--header-height));
+}
+
+.card {
+  background-color: var(--bg-color);
+  border-radius: 10px;
+  box-shadow: var(--shadow);
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.card-title {
+  font-size: 18px;
+  margin-bottom: 15px;
+  color: var(--primary-color);
+}
+
+/* Modal */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  opacity: 0;
+  visibility: hidden;
+  transition: var(--transition);
+}
+
+.modal.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+.modal-content {
+  background-color: var(--bg-color);
+  border-radius: 10px;
+  width: 90%;
+  max-width: 500px;
+  max-height: 90vh;
+  overflow-y: auto;
+  padding: 20px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.modal-title {
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: var(--text-light);
+}
+
+.setting-option {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 15px 0;
+  border-bottom: 1px solid var(--secondary-color);
+}
+
+.setting-label {
+  font-size: 16px;
+}
+
+.theme-selector {
+  display: flex;
+  gap: 10px;
+}
+
+.theme-option {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  cursor: pointer;
+  border: 2px solid transparent;
+}
+
+.theme-option.active {
+  border-color: var(--primary-color);
+}
+
+.theme-light {
+  background-color: #f8f9fa;
+}
+
+.theme-dark {
+  background-color: #1a202c;
+}
+
+.theme-system {
+  background: linear-gradient(45deg, #f8f9fa 50%, #1a202c 50%);
+}
+
+select {
+  padding: 8px 12px;
+  border-radius: 5px;
+  border: 1px solid var(--secondary-color);
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  cursor: pointer;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  aside {
+    transform: translateX(-100%);
+    width: var(--aside-width);
+    z-index: 102;
+  }
+
+  aside.active {
+    transform: translateX(0);
+  }
+
+  aside.expanded {
+    width: var(--aside-width);
+  }
+
+  main {
+    margin-left: 0;
+  }
+
+  .toggle-btn {
+    display: none;
+  }
+
+  .mobile-menu-btn {
+    display: block;
+    font-size: 24px;
+    margin-right: 15px;
+    cursor: pointer;
+  }
+
+  .tabs-wrapper {
+    margin-left: 0;
+  }
+}
+
+@media (min-width: 769px) {
+  .mobile-menu-btn {
+    display: none;
+  }
 }

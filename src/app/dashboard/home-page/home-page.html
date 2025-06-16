@@ -1,3 +1,273 @@
- <main style="margin-left: 270px; padding: 2rem;">
-    <p>Aquí pots posar el contingut principal de la teva pàgina.</p>
-  </main>
+<!-- Content -->
+<div class="content">
+  <div class="card">
+    <h2 class="card-title">Benvingut/da al teu Dashboard</h2>
+    <p>
+      Aquesta és la versió final del dashboard amb totes les funcionalitats
+      demanades:
+    </p>
+    <ul>
+      <li>Menú lateral amb submenús</li>
+      <li>Tabs amb scroll horitzontal i creus per tancar</li>
+      <li>Indicadors de canvis no guardats (punts vermells)</li>
+      <li>Mode clar/fosc completament funcional</li>
+      <li>Disseny responsive sense scrolls no desitjats</li>
+    </ul>
+  </div>
+  <div class="card">
+    <h2 class="card-title">Estadístiques recents</h2>
+    <p>Aquí es mostrarien les teves estadístiques i dades importants.</p>
+  </div>
+  <div class="card">
+    <h2 class="card-title">Activitat recent</h2>
+    <p>Aquí es mostraria l'activitat recent del teu compte.</p>
+  </div>
+  <div class="card">
+    <h2 class="card-title">Missatges</h2>
+    <p>Aquí es mostrarien els teus missatges i notificacions.</p>
+  </div>
+  <div class="card">
+    <h2 class="card-title">Més contingut</h2>
+    <p>
+      Contingut addicional per demostrar el scroll vertical dins de la secció.
+    </p>
+    <p>
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam auctor,
+      nisl eget ultricies tincidunt, nisl nisl aliquam nisl, eget ultricies nisl
+      nisl eget nisl.
+    </p>
+    <p>
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam auctor,
+      nisl eget ultricies tincidunt, nisl nisl aliquam nisl, eget ultricies nisl
+      nisl eget nisl.
+    </p>
+  </div>
+  <div class="card">
+    <h2 class="card-title">Més contingut</h2>
+    <p>
+      Contingut addicional per demostrar el scroll vertical dins de la secció.
+    </p>
+    <p>
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam auctor,
+      nisl eget ultricies tincidunt, nisl nisl aliquam nisl, eget ultricies nisl
+      nisl eget nisl.
+    </p>
+    <p>
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam auctor,
+      nisl eget ultricies tincidunt, nisl nisl aliquam nisl, eget ultricies nisl
+      nisl eget nisl.
+    </p>
+  </div>
+  <div class="card">
+    <h2 class="card-title">Més contingut</h2>
+    <p>
+      Contingut addicional per demostrar el scroll vertical dins de la secció.
+    </p>
+    <p>
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam auctor,
+      nisl eget ultricies tincidunt, nisl nisl aliquam nisl, eget ultricies nisl
+      nisl eget nisl.
+    </p>
+    <p>
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam auctor,
+      nisl eget ultricies tincidunt, nisl nisl aliquam nisl, eget ultricies nisl
+      nisl eget nisl.
+    </p>
+  </div>
+</div>
+<script>
+  // Toggle aside menu
+  const toggleBtn = document.getElementById("toggle-btn");
+  const aside = document.getElementById("aside");
+  const mobileMenuBtn = document.getElementById("mobile-menu-btn");
+
+  toggleBtn.addEventListener("click", () => {
+    aside.classList.toggle("expanded");
+    toggleBtn.querySelector("i").classList.toggle("fa-chevron-right");
+    toggleBtn.querySelector("i").classList.toggle("fa-chevron-left");
+  });
+
+  mobileMenuBtn.addEventListener("click", () => {
+    aside.classList.toggle("active");
+  });
+
+  // Tancar menú en fer clic fora en mòbil
+  document.addEventListener("click", (e) => {
+    if (
+      window.innerWidth <= 768 &&
+      !aside.contains(e.target) &&
+      e.target !== mobileMenuBtn
+    ) {
+      aside.classList.remove("active");
+    }
+  });
+
+  // Submenús del menú lateral
+  const menuItemsWithSubmenu = document.querySelectorAll(
+    ".menu-item:has(.submenu)"
+  );
+
+  menuItemsWithSubmenu.forEach((item) => {
+    item.addEventListener("click", (e) => {
+      if (e.target.closest(".submenu")) return;
+      item.classList.toggle("expanded");
+    });
+  });
+
+  // Settings modal
+  const settingsBtn = document.getElementById("settings-btn");
+  const settingsModal = document.getElementById("settings-modal");
+  const closeSettings = document.getElementById("close-settings");
+  settingsBtn.addEventListener("click", () =>
+    settingsModal.classList.add("active")
+  );
+  closeSettings.addEventListener("click", () =>
+    settingsModal.classList.remove("active")
+  );
+
+  // Notifications modal
+  const notificationsBtn = document.getElementById("notifications-btn");
+  const notificationsModal = document.getElementById("notifications-modal");
+  const closeNotifications = document.getElementById("close-notifications");
+  notificationsBtn.addEventListener("click", () =>
+    notificationsModal.classList.add("active")
+  );
+  closeNotifications.addEventListener("click", () =>
+    notificationsModal.classList.remove("active")
+  );
+
+  // Close modals when clicking outside
+  window.addEventListener("click", (e) => {
+    if (e.target === settingsModal) settingsModal.classList.remove("active");
+    if (e.target === notificationsModal)
+      notificationsModal.classList.remove("active");
+  });
+
+  // Theme switcher
+  const themeOptions = document.querySelectorAll(".theme-option");
+  themeOptions.forEach((option) => {
+    option.addEventListener("click", () => {
+      themeOptions.forEach((opt) => opt.classList.remove("active"));
+      option.classList.add("active");
+      const theme = option.dataset.theme;
+      if (theme === "dark") {
+        document.body.classList.add("dark-mode");
+        localStorage.setItem("theme", "dark");
+      } else if (theme === "light") {
+        document.body.classList.remove("dark-mode");
+        localStorage.setItem("theme", "light");
+      } else {
+        if (
+          window.matchMedia &&
+          window.matchMedia("(prefers-color-scheme: dark)").matches
+        ) {
+          document.body.classList.add("dark-mode");
+        } else {
+          document.body.classList.remove("dark-mode");
+        }
+        localStorage.setItem("theme", "system");
+      }
+    });
+  });
+
+  // Check for saved theme preference
+  const savedTheme = localStorage.getItem("theme");
+  if (
+    savedTheme === "dark" ||
+    (savedTheme === "system" &&
+      window.matchMedia &&
+      window.matchMedia("(prefers-color-scheme: dark)").matches)
+  ) {
+    document.body.classList.add("dark-mode");
+    document.querySelector(".theme-dark").classList.add("active");
+    document.querySelector(".theme-light").classList.remove("active");
+    document.querySelector(".theme-system").classList.remove("active");
+  } else if (savedTheme === "system") {
+    document.querySelector(".theme-system").classList.add("active");
+    document.querySelector(".theme-light").classList.remove("active");
+    document.querySelector(".theme-dark").classList.remove("active");
+  }
+
+  window
+    .matchMedia("(prefers-color-scheme: dark)")
+    .addEventListener("change", (e) => {
+      if (localStorage.getItem("theme") === "system") {
+        if (e.matches) document.body.classList.add("dark-mode");
+        else document.body.classList.remove("dark-mode");
+      }
+    });
+
+  // Tab functionality
+  const tabs = document.querySelectorAll(".tab");
+  const tabCloseButtons = document.querySelectorAll(".tab-close");
+
+  tabs.forEach((tab) => {
+    tab.addEventListener("click", (e) => {
+      if (e.target.closest(".tab-close")) return;
+      tabs.forEach((t) => t.classList.remove("active"));
+      tab.classList.add("active");
+    });
+  });
+
+  tabCloseButtons.forEach((button) => {
+    button.addEventListener("click", (e) => {
+      e.stopPropagation();
+      const tab = e.target.closest(".tab");
+      if (
+        tab.classList.contains("unsaved") &&
+        !confirm("Hi ha canvis no guardats. Esteu segur que voleu tancar?")
+      ) {
+        return;
+      }
+      tab.remove();
+      if (tab.classList.contains("active")) {
+        const remainingTabs = document.querySelectorAll(".tab");
+        if (remainingTabs.length > 0) {
+          remainingTabs[0].classList.add("active");
+        }
+      }
+      updateScrollArrows(); // NOU: Actualitza les fletxes després de tancar una pestanya
+    });
+  });
+
+  // --- NOU CODI PER A LES FLETXES DE SCROLL DELS TABS ---
+  const tabsContainer = document.getElementById("tabs-container");
+  const scrollLeftBtn = document.getElementById("scroll-left-btn");
+  const scrollRightBtn = document.getElementById("scroll-right-btn");
+
+  function updateScrollArrows() {
+    if (!tabsContainer) return;
+
+    const maxScrollLeft = tabsContainer.scrollWidth - tabsContainer.clientWidth;
+
+    // Mostra o amaga la fletxa esquerra
+    scrollLeftBtn.style.display =
+      tabsContainer.scrollLeft > 1 ? "flex" : "none";
+
+    // Mostra o amaga la fletxa dreta
+    scrollRightBtn.style.display =
+      tabsContainer.scrollLeft < maxScrollLeft - 1 ? "flex" : "none";
+  }
+
+  // Event listeners per als botons de scroll
+  scrollLeftBtn.addEventListener("click", () => {
+    tabsContainer.scrollLeft -= 200;
+  });
+
+  scrollRightBtn.addEventListener("click", () => {
+    tabsContainer.scrollLeft += 200;
+  });
+
+  // Actualitza les fletxes quan es fa scroll dins del contenidor
+  tabsContainer.addEventListener("scroll", updateScrollArrows);
+
+  // Actualitza les fletxes quan canvia la mida de la finestra
+  window.addEventListener("resize", updateScrollArrows);
+
+  // Observador per quan s'afegeixen o s'eliminen tabs
+  const observer = new MutationObserver(updateScrollArrows);
+  observer.observe(document.querySelector(".tabs"), { childList: true });
+
+  // Crida inicial per comprovar l'estat en carregar la pàgina
+  setTimeout(updateScrollArrows, 200);
+</script>

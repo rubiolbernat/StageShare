@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { Header } from '../../dashboard/components/header/header';
 import { Aside } from '../../dashboard/components/aside/aside';
+import { DashLayoutService } from '../../core/services/dash-layout-service';
 
 @Component({
   selector: 'app-dashboard-layout',
@@ -10,5 +11,9 @@ import { Aside } from '../../dashboard/components/aside/aside';
   styleUrl: './dashboard-layout.css'
 })
 export class DashboardLayout {
+  private LayoutService = inject(DashLayoutService)
 
+  getAside() {
+    return this.LayoutService.getisAside()
+  }
 }
