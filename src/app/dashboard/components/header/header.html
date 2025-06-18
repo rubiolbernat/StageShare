@@ -159,26 +159,39 @@
 <div class="modal" id="settings-modal" [class.active]="settingsModal()">
   <div class="modal-content">
     <div class="modal-header">
-      <h3 class="modal-title">Configuració</h3>
+      <h3 class="modal-title">Settings</h3>
       <button class="close-btn" id="close-settings" (click)="closeModals()">
         ×
       </button>
     </div>
     <div class="setting-option">
-      <div class="setting-label">Idioma</div>
+      <div class="setting-label">Language</div>
       <select>
+        <option>English</option>
         <option>Català</option>
-        <option>Espanyol</option>
-        <option>Anglès</option>
-        <option>Francès</option>
       </select>
     </div>
     <div class="setting-option">
-      <div class="setting-label">Tema</div>
+      <div class="setting-label">Theme</div>
       <div class="theme-selector">
-        <div class="theme-option theme-light active" data-theme="light"></div>
-        <div class="theme-option theme-dark" data-theme="dark"></div>
-        <div class="theme-option theme-system" data-theme="system"></div>
+        <div
+          class="theme-option theme-light"
+          [class.active]="!isDarkMode() && !isSysTheme()"
+          data-theme="light"
+          (click)="setDarkMode(false)"
+        ></div>
+        <div
+          class="theme-option theme-dark"
+          [class.active]="isDarkMode() && !isSysTheme()"
+          data-theme="dark"
+          (click)="setDarkMode(true)"
+        ></div>
+        <div
+          class="theme-option theme-system"
+          [class.active]="isSysTheme()"
+          data-theme="system"
+          (click)="setSysTheme()"
+        ></div>
       </div>
     </div>
   </div>

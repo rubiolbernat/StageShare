@@ -37,3 +37,26 @@ body {
   transition: var(--transition);
   overflow: hidden;
 }
+
+/* Content */
+.content {
+  background-color: var(--secondary-color);
+  padding: 20px;
+  overflow-y: auto;
+  flex-grow: 1;
+  height: calc(100vh - var(--header-height));
+}
+
+.card {
+  background-color: var(--bg-color);
+  border-radius: 10px;
+  box-shadow: var(--shadow);
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.card-title {
+  font-size: 18px;
+  margin-bottom: 15px;
+  color: var(--primary-color);
+}

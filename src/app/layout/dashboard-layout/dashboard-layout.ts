@@ -16,4 +16,8 @@ export class DashboardLayout {
   getAside() {
     return this.LayoutService.getisAside()
   }
+
+  isDarkMode(){
+    return this.LayoutService.getIsDarkTheme()
+  }
 }

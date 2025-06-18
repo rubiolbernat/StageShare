@@ -5,13 +5,13 @@
   [class.expanded]="getAside()"
   [class.mobile]="getAside()"
 >
-  <div class="logo">
-    <div class="logo-icon">
+  <div class="logo" >
+    <div class="logo-icon" routerLink="/">
       <i class="fas"
         ><img src="Stage-Share.png" height="30px" alt="Stage Share Logo"
       /></i>
     </div>
-    <div class="logo-text">Stage Share</div>
+    <div class="logo-text" routerLink="/">Stage Share</div>
     <button class="toggle-btn" id="toggle-btn" (click)="toggleAside()">
       <i class="fas">
         <svg
@@ -35,7 +35,7 @@
     </button>
   </div>
   <div class="menu">
-    <div class="menu-item" routerLink="/inici" routerLinkActive="active">
+    <div class="menu-item" routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
       <div class="menu-icon">
         <i class="fas fa-home"
           ><svg
@@ -61,6 +61,8 @@
     <div
       class="menu-item"
       id="reports-item"
+      [class.expanded]="getSubmenuState(0)"
+      (click)="toggleSubmenu(0)"
       routerLink="/home"
       routerLinkActive="active"
     >
@@ -120,7 +122,7 @@
         </div>
       </div>
     </div>
-    <div class="menu-item">
+    <div class="menu-item" routerLink="/venues" routerLinkActive="active">
       <div class="menu-icon">
         <i class="fas"
           ><svg
@@ -147,7 +149,12 @@
       </div>
       <div class="menu-text">Stage Search</div>
     </div>
-    <div class="menu-item" id="management-item">
+    <div
+      class="menu-item"
+      id="management-item"
+      [class.expanded]="getSubmenuState(1)"
+      (click)="toggleSubmenu(1)"
+    >
       <div class="menu-icon">
         <i class="fas"
           ><svg
@@ -273,21 +280,6 @@
   </div>
 </aside>
 <script>
-  // Toggle aside menu
-  const toggleBtn = document.getElementById("toggle-btn");
-  const aside = document.getElementById("aside");
-  const mobileMenuBtn = document.getElementById("mobile-menu-btn");
-
-  toggleBtn.addEventListener("click", () => {
-    aside.classList.toggle("expanded");
-    toggleBtn.querySelector("i").classList.toggle("fa-chevron-right");
-    toggleBtn.querySelector("i").classList.toggle("fa-chevron-left");
-  });
-
-  mobileMenuBtn.addEventListener("click", () => {
-    aside.classList.toggle("active");
-  });
-
   // Tancar menú en fer clic fora en mòbil
   document.addEventListener("click", (e) => {
     if (

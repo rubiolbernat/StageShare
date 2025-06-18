@@ -1,4 +1,4 @@
-<div class="app-container">
+<div class="app-container" [class.dark-mode]="this.isDarkMode()">
   <app-aside></app-aside>
   <main class="content-wrapper" [class.aside-expanded]="getAside()">
     <app-header></app-header>

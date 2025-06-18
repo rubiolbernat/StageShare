@@ -1,10 +1,10 @@
-import { Component, inject } from '@angular/core';
-import { Router, RouterLink } from '@angular/router';
+import { Component, inject, signal } from '@angular/core';
+import { Router, RouterLinkActive, RouterModule } from '@angular/router';
 import { DashLayoutService } from '../../../core/services/dash-layout-service';
 
 @Component({
   selector: 'app-aside',
-  imports: [RouterLink],
+  imports: [RouterModule, RouterLinkActive],
   templateUrl: './aside.html',
   styleUrl: './aside.css'
 })
@@ -27,5 +27,26 @@ export class Aside {
 
   onResize($event: Event): void {
     this.LayoutService.closeAside()
+    this.closeSubmenus();
+  }
+
+  /* Submenu */
+  readonly NSubmenus: number = 2
+  private Submenu = signal<boolean[]>(Array(this.NSubmenus).fill(false));
+
+  toggleSubmenu(id: number) {
+    this.Submenu.update(current => {
+      const newState = [...current];
+      newState[id] = !newState[id];
+      return newState;
+    });
+  }
+
+  closeSubmenus(){
+    this.Submenu.set(Array(this.NSubmenus).fill(false));
+  }
+
+  getSubmenuState(id: number) {
+    return this.Submenu()[id]
   }
 }

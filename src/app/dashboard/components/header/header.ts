@@ -13,7 +13,7 @@ export class Header {
 
   public settingsModal = signal<boolean>(false)
   public messagesModal = signal<boolean>(false)
-
+  /* Modal Options */
   openSettingsModal() {
     this.closeModals()
     this.settingsModal.set(true)
@@ -32,4 +32,21 @@ export class Header {
   toggleAside() {
     this.LayoutService.toggleAside();
   }
+
+  /* THEME OPTIONS */
+  setDarkMode(mode: boolean) {
+    this.LayoutService.setDarkMode(mode)
+  }
+
+  setSysTheme() {
+    this.LayoutService.setSystemTheme()
+  }
+
+  isDarkMode(){
+    return this.LayoutService.getIsDarkTheme()
+  }
+  isSysTheme(){
+    return this.LayoutService.getIsSysTheme()
+  }
+
 }

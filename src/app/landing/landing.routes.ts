@@ -8,7 +8,7 @@ export const LANDING_ROUTES: Routes =[
     component: LandingLayout,
     children:[
       {
-        path: '',
+        path: 'test',
         component: HomePage
       }
     ]
