@@ -1,4 +1,4 @@
-CREATE TABLE fixtures (
+CREATE TABLE gdtf_fixtures (
   id INT PRIMARY KEY AUTO_INCREMENT,
   gdtf_rid INT NOT NULL UNIQUE,
   name VARCHAR(255) NOT NULL,
@@ -17,32 +17,32 @@ CREATE TABLE fixtures (
   UNIQUE KEY (manufacturer, name)
 );
 
-CREATE TABLE modes (
+CREATE TABLE gdtf_modes (
   id INT PRIMARY KEY AUTO_INCREMENT,
   fixture_id INT NOT NULL,
   name VARCHAR(255) NOT NULL,
   description TEXT,
   physical_channels INT NOT NULL,
   is_default BOOLEAN DEFAULT FALSE,
-  FOREIGN KEY (fixture_id) REFERENCES fixtures(id) ON DELETE CASCADE,
+  FOREIGN KEY (fixture_id) REFERENCES gdtf_fixtures(id) ON DELETE CASCADE,
   UNIQUE KEY (fixture_id, name)
 );
 
-CREATE TABLE channels (
+CREATE TABLE gdtf_channels (
   id INT PRIMARY KEY AUTO_INCREMENT,
   mode_id INT NOT NULL,
   channel_number INT NOT NULL,
   name VARCHAR(255) NOT NULL,
   attribute VARCHAR(100) NOT NULL,
   -- ex: 'DIMMER', 'PAN'
-  FOREIGN KEY (mode_id) REFERENCES modes(id) ON DELETE CASCADE,
+  FOREIGN KEY (mode_id) REFERENCES gdtf_modes(id) ON DELETE CASCADE,
   UNIQUE KEY (mode_id, channel_number)
 );
 
 -- Índexs per millorar les cerques per atribut
-CREATE INDEX idx_channel_attribute ON channels(attribute);
+CREATE INDEX idx_channel_attribute ON gdtf_channels(attribute);
 
-CREATE INDEX idx_channel_mode ON channels(mode_id);
+CREATE INDEX idx_channel_mode ON gdtf_channels(mode_id);
 
 -- EXEMPLE QUERY
 -- 1. Find fixtures with dimmer on channel 1 and pan on channel 3:
