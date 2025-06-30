@@ -19,6 +19,9 @@ export const DASHBOARD_ROUTES: Routes = [
       {
         path: 'venues',
         loadComponent: () => import('./venues/venues').then(m => m.Venues)
+      },{
+        path: 'fixturefinder',
+        loadComponent: () => import('./fixture-finder/fixture-finder').then(m => m.FixtureFinder)
       }
     ]
   }

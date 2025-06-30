@@ -1,20 +1,18 @@
 CREATE TABLE gdtf_fixtures (
   id INT PRIMARY KEY AUTO_INCREMENT,
-  gdtf_rid INT NOT NULL UNIQUE,
+  rid INT NOT NULL UNIQUE,
   name VARCHAR(255) NOT NULL,
   manufacturer VARCHAR(255) NOT NULL,
   revision VARCHAR(100),
-  creation_date INT,
-  last_modified INT,
+  creation_date BIGINT,
+  last_modified BIGINT,
   uploader VARCHAR(255),
   rating DECIMAL(3, 1),
   version VARCHAR(50),
   creator VARCHAR(255),
-  uuid VARCHAR(36) UNIQUE,
+  uuid VARCHAR(36),
   filesize INT,
-  -- Camps addicionals per a la teva aplicació
-  gdtf_file_url VARCHAR(255) NOT NULL,
-  UNIQUE KEY (manufacturer, name)
+  thumbnail VARCHAR(255) NULL DEFAULT NULL
 );
 
 CREATE TABLE gdtf_modes (
@@ -22,8 +20,7 @@ CREATE TABLE gdtf_modes (
   fixture_id INT NOT NULL,
   name VARCHAR(255) NOT NULL,
   description TEXT,
-  physical_channels INT NOT NULL,
-  is_default BOOLEAN DEFAULT FALSE,
+  dmx_footprint INT NOT NULL,
   FOREIGN KEY (fixture_id) REFERENCES gdtf_fixtures(id) ON DELETE CASCADE,
   UNIQUE KEY (fixture_id, name)
 );
@@ -39,10 +36,6 @@ CREATE TABLE gdtf_channels (
   UNIQUE KEY (mode_id, channel_number)
 );
 
--- Índexs per millorar les cerques per atribut
-CREATE INDEX idx_channel_attribute ON gdtf_channels(attribute);
-
-CREATE INDEX idx_channel_mode ON gdtf_channels(mode_id);
 
 -- EXEMPLE QUERY
 -- 1. Find fixtures with dimmer on channel 1 and pan on channel 3:
