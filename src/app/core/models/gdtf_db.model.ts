@@ -26,9 +26,9 @@ export interface gdtfMode {
 }
 
 export interface gdtfChannels {
-  id: number;
-  mode_id: number; // Foreign key to gdtf_modes
-  channel_number: number; // Channel number in the mode
-  name: string; // Name of the channel
-  attribute: string; // Type of channel, e.g., 'DIMMER', 'PAN'
+  id?: number;
+  mode_id?: number; // Foreign key to gdtf_modes
+  channel_number: number | null; // Channel number in the mode
+  name?: string; // Name of the channel
+  attribute?: string; // Type of channel, e.g., 'DIMMER', 'PAN'
 }

@@ -81,11 +81,13 @@
         </div>
         <div class="collapse show" id="channelSearch">
           <div class="search-content">
-            <div class="mb-3">
+            <div class="mb-3 overflow-search-content">
               <label class="form-label">Search by channel configuration:</label>
-
-              <div id="channelInputsContainer">
+              @for (item of searchByChannels(); track item) {
+              <div class="channelInputsContainer mb-3">
+                <!-- Afegeixo un marge per separar les files -->
                 <div class="channel-row row g-3">
+                  <!-- Input del número de Canal -->
                   <div class="col-md-2 col-sm-12">
                     <label class="form-label small">Channel</label>
                     <input
@@ -93,43 +95,67 @@
                       class="form-control channel-number"
                       placeholder="1"
                       min="1"
+                      [(ngModel)]="item.channel_number"
+                      [name]="'channel_number_' + $index"
                     />
                   </div>
+
+                  <!-- Input de l'Atribut -->
                   <div class="col-md-4 col-sm-12">
                     <label class="form-label small">Attribute</label>
                     <input
                       type="text"
                       class="form-control channel-attribute"
                       placeholder="DIMMER, PAN, etc"
+                      [(ngModel)]="item.attribute"
+                      [name]="'channel_attribute_' + $index"
                     />
                   </div>
+
+                  <!-- Input del Nom -->
                   <div class="col-md-4 col-sm-12">
                     <label class="form-label small">Name (optional)</label>
                     <input
                       type="text"
                       class="form-control channel-name"
                       placeholder="e.g. Dimmer, Pan"
+                      [(ngModel)]="item.name"
+                      [name]="'channel_name_' + $index"
                     />
                   </div>
+
+                  <!-- Botó d'Eliminar -->
                   <div class="col-md-2 col-sm-12 d-flex align-items-end">
                     <button
-                      class="btn btn-outline-danger w-100 remove-channel d-none"
+                      class="btn btn-outline-danger w-100 remove-channel"
+                      [class.d-none]="searchByChannels().length <= 1"
+                      (click)="removeChannel($index)"
                     >
-                      <i class="bi bi-times"></i>
+                      <i class="bi bi-x-lg"></i>
                     </button>
                   </div>
                 </div>
               </div>
+              }
             </div>
-
             <div class="d-flex flex-wrap justify-content-between">
               <button
                 id="addChannelBtn"
                 class="btn btn-outline-primary mb-2 mb-md-0"
+                (click)="addChannel()"
               >
                 <i class="bi bi-plus me-2"></i> Add Channel
+                <!-- Afegeix això per mostrar el recompte -->
+                <span class="badge bg-secondary ms-2"
+                  >{{ searchByChannels().length }}</span
+                >
               </button>
-              <button id="searchChannelsBtn" class="btn btn-primary">
+
+              <button
+                id="searchChannelsBtn"
+                class="btn btn-primary"
+                (click)="logData()"
+              >
                 <i class="bi bi-search me-2"></i> Find Matching Fixtures
               </button>
             </div>

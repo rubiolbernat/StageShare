@@ -60,6 +60,37 @@
   filter: invert(1) grayscale(100%) brightness(200%);
 }
 
+.channel-row {
+  background-color: rgba(0, 0, 0, 0.062);
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  transition: all 0.3s ease;
+}
+
+.channel-row:hover {
+  background-color: rgba(0, 0, 0, 0.3);
+}
+
+.overflow-search-content {
+  padding: 10px;
+  overflow-y: auto;
+  flex-grow: 1;
+  max-height: calc(50vh - var(--header-height));
+}
+
+.overflow-search-content::-webkit-scrollbar {
+  width: 5px;
+  border-radius: 50px;
+  background-color: #aaaaaa23; /* or add it to the track */
+}
+
+/* Add a thumb */
+.overflow-search-content::-webkit-scrollbar-thumb {
+  background: var(--primary-color); /* Color of the scrollbar thumb */
+  border-radius: 50px;
+}
+
 /*
  * Petita animació d'entrada per a les files de resultats.
  */
