@@ -91,6 +91,19 @@
   border-radius: 50px;
 }
 
+
+.results-responsive::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+  border-radius: 50px;
+  background-color: #aaaaaa23; /* or add it to the track */
+}
+
+/* Add a thumb */
+.results-responsive::-webkit-scrollbar-thumb {
+  background: var(--primary-color); /* Color of the scrollbar thumb */
+  border-radius: 50px;
+}
 /*
  * Petita animació d'entrada per a les files de resultats.
  */

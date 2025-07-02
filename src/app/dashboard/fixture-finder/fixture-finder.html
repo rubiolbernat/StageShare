@@ -25,8 +25,8 @@
                 <input
                   type="text"
                   class="form-control"
-                  id="searchName"
                   placeholder="e.g. Sharpy, Ayrton"
+                  [(ngModel)]="searchName"
                 />
               </div>
             </div>
@@ -39,8 +39,9 @@
                 <input
                   type="text"
                   class="form-control"
-                  id="searchManufacturer"
                   placeholder="e.g. Martin, Robe"
+                  [(ngModel)]="searchManufacturer"
+                  (ngModelChange)="searchManufacturer.set($event)"
                 />
               </div>
             </div>
@@ -53,13 +54,14 @@
                 <input
                   type="text"
                   class="form-control"
-                  id="searchCreator"
                   placeholder="Creator username"
+                  [(ngModel)]="searchCreator"
+                  (ngModelChange)="searchCreator.set($event)"
                 />
               </div>
             </div>
             <div class="d-grid">
-              <button id="searchBtn" class="btn btn-primary">
+              <button class="btn btn-primary" (click)="performSearch()">
                 <i class="bi bi-search me-2"></i> Search Fixtures
               </button>
             </div>
@@ -83,11 +85,10 @@
           <div class="search-content">
             <div class="mb-3 overflow-search-content">
               <label class="form-label">Search by channel configuration:</label>
-              @for (item of searchByChannels(); track item) {
+              @for (item of searchByChannels(); track $index) {
               <div class="channelInputsContainer mb-3">
-                <!-- Afegeixo un marge per separar les files -->
                 <div class="channel-row row g-3">
-                  <!-- Input del número de Canal -->
+                  <!-- Channel Number -->
                   <div class="col-md-2 col-sm-12">
                     <label class="form-label small">Channel</label>
                     <input
@@ -100,7 +101,7 @@
                     />
                   </div>
 
-                  <!-- Input de l'Atribut -->
+                  <!-- Attribute -->
                   <div class="col-md-4 col-sm-12">
                     <label class="form-label small">Attribute</label>
                     <input
@@ -112,7 +113,7 @@
                     />
                   </div>
 
-                  <!-- Input del Nom -->
+                  <!-- Name -->
                   <div class="col-md-4 col-sm-12">
                     <label class="form-label small">Name (optional)</label>
                     <input
@@ -124,7 +125,7 @@
                     />
                   </div>
 
-                  <!-- Botó d'Eliminar -->
+                  <!-- Remove Button -->
                   <div class="col-md-2 col-sm-12 d-flex align-items-end">
                     <button
                       class="btn btn-outline-danger w-100 remove-channel"
@@ -140,22 +141,16 @@
             </div>
             <div class="d-flex flex-wrap justify-content-between">
               <button
-                id="addChannelBtn"
                 class="btn btn-outline-primary mb-2 mb-md-0"
                 (click)="addChannel()"
               >
                 <i class="bi bi-plus me-2"></i> Add Channel
-                <!-- Afegeix això per mostrar el recompte -->
                 <span class="badge bg-secondary ms-2"
                   >{{ searchByChannels().length }}</span
                 >
               </button>
 
-              <button
-                id="searchChannelsBtn"
-                class="btn btn-primary"
-                (click)="logData()"
-              >
+              <button class="btn btn-primary" (click)="performChannelSearch()">
                 <i class="bi bi-search me-2"></i> Find Matching Fixtures
               </button>
             </div>
@@ -173,7 +168,7 @@
           class="card-header d-flex justify-content-between align-items-center"
         >
           <h5 class="mb-0"><i class="bi bi-list me-2"></i> Results</h5>
-          <span id="resultCount" class="badge bg-primary">0 fixtures</span>
+          <span id="resultCount" class="badge bg-primary">{{searchResults().length}} fixtures</span>
         </div>
         <div class="card-body">
           <!-- Loading Spinner -->
@@ -188,7 +183,7 @@
           </div>
 
           <!-- Results Table -->
-          <div class="table-responsive">
+          <div class="table-responsive results-responsive">
             <table class="table table-hover">
               <thead>
                 <tr>
@@ -201,13 +196,78 @@
                   <th style="width: 10%">Actions</th>
                 </tr>
               </thead>
-              <tbody id="resultsTable">
+              <tbody>
+                @if (isLoading()) {
+                <tr>
+                  <td colspan="7" class="text-center py-5">
+                    <div
+                      class="loading-spinner spinner-border text-primary"
+                      role="status"
+                    >
+                      <span class="visually-hidden">Loading...</span>
+                    </div>
+                    <p class="mt-3">Searching fixtures...</p>
+                  </td>
+                </tr>
+                } @else if (searchResults().length === 0) {
                 <tr>
                   <td colspan="7" class="text-center py-5 text-muted">
                     <i class="bi bi-search bi-2x mb-3"></i>
                     <p>Use the search filters above to find fixtures</p>
                   </td>
                 </tr>
+                } @else { @for (fixture of searchResults(); track fixture.id) {
+                <tr>
+                  <td>
+                    <div class="d-flex align-items-center">
+                      <img
+                        [src]="fixture.thumbnail || 'assets/images/default-fixture.png'"
+                        class="rounded me-3"
+                        width="40"
+                        height="40"
+                        [alt]="fixture.name"
+                      />
+                      <div>
+                        <strong>{{ fixture.name }}</strong>
+                        <div class="text-muted small">
+                          {{ fixture.manufacturer }}
+                        </div>
+                      </div>
+                    </div>
+                  </td>
+                  <td>{{ fixture.manufacturer }}</td>
+                  <td>{{ fixture.creator }}</td>
+                  <td>v{{ fixture.version }}</td>
+                  <td>
+                    <div class="d-flex align-items-center">
+                      @for (star of [].constructor(getRatingStars(fixture.rating
+                      || 0).full); track $index) {
+                      <i class="bi bi-star-fill text-warning"></i>
+                      } @if (getRatingStars(fixture.rating || 0).half) {
+                      <i class="bi bi-star-half text-warning"></i>
+                      } @for (star of
+                      [].constructor(getRatingStars(fixture.rating || 0).empty);
+                      track $index) {
+                      <i class="bi bi-star text-warning"></i>
+                      }
+                      <span class="ms-2">{{fixture.rating?.toFixed(1)}}</span>
+                    </div>
+                  </td>
+                  <td>
+                    <span class="badge bg-secondary"
+                      >{{ fixture.modes?.length || 0 }} modes</span
+                    >
+                  </td>
+                  <td>
+                    <button
+                      class="btn view-btn btn-sm bg-primary text-white"
+                      (click)="openDetailsModal(fixture)"
+                    >
+                      <i class="bi bi-eye me-1"></i> View
+                    </button>
+                  </td>
+                </tr>
+                } }
               </tbody>
             </table>
           </div>
@@ -218,12 +278,9 @@
 </div>
 
 <!-- Fixture Details Modal -->
-<div
-  class="modal fade"
-  id="fixtureDetailsModal"
-  tabindex="-1"
-  aria-hidden="true"
->
+@if (showModal() && selectedFixture()) {
+<div class="modal-backdrop show"></div>
+<div class="modal show d-block" tabindex="-1" aria-modal="true" role="dialog">
   <div class="modal-dialog modal-xl modal-dialog-centered">
     <div
       class="modal-content"
@@ -233,27 +290,170 @@
       "
     >
       <div class="modal-header border-secondary">
-        <h5 class="modal-title" id="fixtureModalTitle">Fixture Details</h5>
+        <h5 class="modal-title">
+          {{ selectedFixture()?.manufacturer }} {{ selectedFixture()?.name }}
+        </h5>
         <button
           type="button"
           class="btn-close btn-close-white"
-          data-bs-dismiss="modal"
+          (click)="closeModal()"
           aria-label="Close"
         ></button>
       </div>
       <div class="modal-body">
-        <div id="fixtureModalBody">
-          <!-- Details will be loaded here -->
+        <div class="row">
+          <div class="col-md-3 text-center mb-4 mb-md-0">
+            <img
+              [src]="selectedFixture()?.thumbnail || 'assets/images/default-fixture.png'"
+              class="img-fluid rounded"
+              [alt]="selectedFixture()?.name"
+            />
+          </div>
+          <div class="col-md-9">
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <h5>
+                  {{ selectedFixture()?.manufacturer }} {{
+                  selectedFixture()?.name }}
+                </h5>
+                <p class="text-muted">
+                  Version {{ selectedFixture()?.version }}
+                </p>
+              </div>
+              <div class="col-md-6 mb-3 text-md-end">
+                <div class="h5">
+                  <span class="d-inline-flex align-items-center">
+                    @for (star of
+                    [].constructor(getRatingStars(selectedFixture()?.rating).full);
+                    track $index) {
+                    <i class="bi bi-star-fill text-warning"></i>
+                    } @if (getRatingStars(selectedFixture()?.rating).half) {
+                    <i class="bi bi-star-half text-warning"></i>
+                    } @for (star of
+                    [].constructor(getRatingStars(selectedFixture()?.rating).empty);
+                    track $index) {
+                    <i class="bi bi-star text-warning"></i>
+                    }
+                    <span class="ms-2"
+                      >{{ selectedFixture()?.rating?.toFixed(1) }}</span
+                    >
+                  </span>
+                </div>
+                <p class="text-muted">
+                  Created by {{ selectedFixture()?.creator }}
+                </p>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-4 mb-3">
+                <div class="card bg-dark border-secondary h-100">
+                  <div class="card-body text-center">
+                    <h6 class="card-title text-muted">Modes</h6>
+                    <p class="h2">
+                      {{ selectedFixture()?.modes?.length || 0 }}
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-4 mb-3">
+                <div class="card bg-dark border-secondary h-100">
+                  <div class="card-body text-center">
+                    <h6 class="card-title text-muted">Latest Version</h6>
+                    <p class="h2">v{{ selectedFixture()?.version }}</p>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-4 mb-3">
+                <div class="card bg-dark border-secondary h-100">
+                  <div class="card-body text-center">
+                    <h6 class="card-title text-muted">File Size</h6>
+                    <p class="h2">{{ (selectedFixture()?.filesize || 0) }}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
+
+        <hr class="my-4 border-secondary" />
+
+        <h5 class="mb-4"><i class="bi bi-sliders2 me-2"></i> Modes</h5>
+
+        @for (mode of selectedFixture()?.modes; track mode.id) {
+        <div class="card bg-dark border-secondary mb-3">
+          <div
+            class="card-header d-flex justify-content-between align-items-center"
+          >
+            <h6 class="mb-0">
+              <i class="bi bi-gear me-2"></i>{{ mode.name }}
+              <span class="badge bg-primary ms-2"
+                >{{ mode.dmx_footprint }} channels</span
+              >
+            </h6>
+            <button
+              class="btn btn-sm btn-outline-primary"
+              (click)="toggleModeCollapse(mode.id)"
+            >
+              <i
+                class="bi"
+                [class.bi-chevron-down]="!isModeCollapsed(mode.id)"
+                [class.bi-chevron-up]="isModeCollapsed(mode.id)"
+              ></i>
+            </button>
+          </div>
+          @if (!isModeCollapsed(mode.id)) {
+          <div class="card-body">
+            @if (mode.channels && mode.channels.length > 0) {
+            <div class="table-responsive">
+              <table class="table table-sm table-dark">
+                <thead>
+                  <tr>
+                    <th>Channel</th>
+                    <th>Name</th>
+                    <th>Attribute</th>
+                    <th>Type</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @for (channel of mode.channels; track channel.id) {
+                  <tr>
+                    <td>{{ channel.channel_number }}</td>
+                    <td>{{ channel.name }}</td>
+                    <td>
+                      <span class="badge bg-secondary"
+                        >{{ channel.attribute }}</span
+                      >
+                    </td>
+                    <td>
+                      <small class="text-muted">{{ channel.attribute }}</small>
+                    </td>
+                  </tr>
+                  }
+                </tbody>
+              </table>
+            </div>
+            } @else {
+            <p class="text-muted">No channel information available</p>
+            }
+          </div>
+          }
+        </div>
+        }
       </div>
       <div class="modal-footer border-secondary">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+        <button type="button" class="btn btn-secondary" (click)="closeModal()">
           Close
         </button>
-        <button type="button" class="btn btn-primary">
+        <button
+          type="button"
+          class="btn btn-primary"
+          (click)="downloadGdtf(selectedFixture()!)"
+        >
           <i class="bi bi-download me-2"></i> Download GDTF
         </button>
       </div>
     </div>
   </div>
 </div>
+}
