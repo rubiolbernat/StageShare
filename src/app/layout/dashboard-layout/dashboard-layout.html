@@ -1,7 +1,14 @@
+<div [attr.data-bs-theme]="isDarkMode() ? 'dark' : 'light'">
 <div class="app-container" [class.dark-mode]="this.isDarkMode()">
   <app-aside></app-aside>
   <main class="content-wrapper" [class.aside-expanded]="getAside()">
     <app-header></app-header>
-    <router-outlet></router-outlet>
+    <!-- Content -->
+    <div class="content">
+      <div class="card">
+        <router-outlet></router-outlet>
+      </div>
+    </div>
   </main>
+</div>
 </div>

@@ -16,7 +16,7 @@ export interface gdtfFixtures {
   modes?: gdtfMode[]; // Array of modes associated with this GDTF database entry
 }
 
-interface gdtfMode {
+export interface gdtfMode {
   id: number;
   fixture_id: number; // Foreign key to gdtf_fixtures
   name: string; // Name of the mode
@@ -25,7 +25,7 @@ interface gdtfMode {
   channels?: gdtfChannels[]; // Array of channels associated with this mode
 }
 
-interface gdtfChannels {
+export interface gdtfChannels {
   id: number;
   mode_id: number; // Foreign key to gdtf_modes
   channel_number: number; // Channel number in the mode

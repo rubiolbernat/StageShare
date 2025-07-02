@@ -1,7 +1,233 @@
-<!-- Content -->
-<div class="content">
-  <div class="card">
-    <h2 class="card-title">Fixture Finder</h2>
-    <p>fixture-finder works!</p>
+<!-- Main Content -->
+<div class="container py-4">
+  <h2>Fixture Finder</h2>
+  <!-- Search Panels -->
+  <div class="row">
+    <!-- Basic Search -->
+    <div class="col-lg-4 mb-4 mb-lg-0">
+      <div class="search-panel">
+        <div
+          class="card-header d-flex justify-content-between align-items-center"
+          data-bs-toggle="collapse"
+          href="#basicSearch"
+        >
+          <h5><i class="bi bi-funnel me-2"></i> Basic Filters</h5>
+          <i class="bi bi-chevron-down"></i>
+        </div>
+        <div class="collapse show" id="basicSearch">
+          <div class="search-content">
+            <div class="mb-3">
+              <label class="form-label">Fixture Name</label>
+              <div class="input-group">
+                <span class="input-group-text"
+                  ><i class="bi bi-lightbulb-fill"></i
+                ></span>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="searchName"
+                  placeholder="e.g. Sharpy, Ayrton"
+                />
+              </div>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Manufacturer</label>
+              <div class="input-group">
+                <span class="input-group-text"
+                  ><i class="bi bi-building"></i
+                ></span>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="searchManufacturer"
+                  placeholder="e.g. Martin, Robe"
+                />
+              </div>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Creator</label>
+              <div class="input-group">
+                <span class="input-group-text"
+                  ><i class="bi bi-person-fill"></i
+                ></span>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="searchCreator"
+                  placeholder="Creator username"
+                />
+              </div>
+            </div>
+            <div class="d-grid">
+              <button id="searchBtn" class="btn btn-primary">
+                <i class="bi bi-search me-2"></i> Search Fixtures
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Channel Search -->
+    <div class="col-lg-8">
+      <div class="search-panel">
+        <div
+          class="card-header d-flex justify-content-between align-items-center"
+          data-bs-toggle="collapse"
+          href="#channelSearch"
+        >
+          <h5><i class="bi bi-sliders2 me-2"></i> Channel Configuration</h5>
+          <i class="bi bi-chevron-down"></i>
+        </div>
+        <div class="collapse show" id="channelSearch">
+          <div class="search-content">
+            <div class="mb-3">
+              <label class="form-label">Search by channel configuration:</label>
+
+              <div id="channelInputsContainer">
+                <div class="channel-row row g-3">
+                  <div class="col-md-2 col-sm-12">
+                    <label class="form-label small">Channel</label>
+                    <input
+                      type="number"
+                      class="form-control channel-number"
+                      placeholder="1"
+                      min="1"
+                    />
+                  </div>
+                  <div class="col-md-4 col-sm-12">
+                    <label class="form-label small">Attribute</label>
+                    <input
+                      type="text"
+                      class="form-control channel-attribute"
+                      placeholder="DIMMER, PAN, etc"
+                    />
+                  </div>
+                  <div class="col-md-4 col-sm-12">
+                    <label class="form-label small">Name (optional)</label>
+                    <input
+                      type="text"
+                      class="form-control channel-name"
+                      placeholder="e.g. Dimmer, Pan"
+                    />
+                  </div>
+                  <div class="col-md-2 col-sm-12 d-flex align-items-end">
+                    <button
+                      class="btn btn-outline-danger w-100 remove-channel d-none"
+                    >
+                      <i class="bi bi-times"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="d-flex flex-wrap justify-content-between">
+              <button
+                id="addChannelBtn"
+                class="btn btn-outline-primary mb-2 mb-md-0"
+              >
+                <i class="bi bi-plus me-2"></i> Add Channel
+              </button>
+              <button id="searchChannelsBtn" class="btn btn-primary">
+                <i class="bi bi-search me-2"></i> Find Matching Fixtures
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Results Section -->
+  <div class="row mt-4">
+    <div class="col-12">
+      <div class="results-card">
+        <div
+          class="card-header d-flex justify-content-between align-items-center"
+        >
+          <h5 class="mb-0"><i class="bi bi-list me-2"></i> Results</h5>
+          <span id="resultCount" class="badge bg-primary">0 fixtures</span>
+        </div>
+        <div class="card-body">
+          <!-- Loading Spinner -->
+          <div id="loadingSpinner" class="text-center py-5 d-none">
+            <div
+              class="loading-spinner spinner-border text-primary"
+              role="status"
+            >
+              <span class="visually-hidden">Loading...</span>
+            </div>
+            <p class="mt-3">Searching fixtures...</p>
+          </div>
+
+          <!-- Results Table -->
+          <div class="table-responsive">
+            <table class="table table-hover">
+              <thead>
+                <tr>
+                  <th style="width: 25%">Fixture</th>
+                  <th style="width: 20%">Manufacturer</th>
+                  <th style="width: 15%">Creator</th>
+                  <th style="width: 10%">Version</th>
+                  <th style="width: 10%">Rating</th>
+                  <th style="width: 10%">Modes</th>
+                  <th style="width: 10%">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="resultsTable">
+                <tr>
+                  <td colspan="7" class="text-center py-5 text-muted">
+                    <i class="bi bi-search bi-2x mb-3"></i>
+                    <p>Use the search filters above to find fixtures</p>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Fixture Details Modal -->
+<div
+  class="modal fade"
+  id="fixtureDetailsModal"
+  tabindex="-1"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-xl modal-dialog-centered">
+    <div
+      class="modal-content"
+      style="
+        background-color: var(--card-bg);
+        border: 1px solid var(--border-color);
+      "
+    >
+      <div class="modal-header border-secondary">
+        <h5 class="modal-title" id="fixtureModalTitle">Fixture Details</h5>
+        <button
+          type="button"
+          class="btn-close btn-close-white"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <div id="fixtureModalBody">
+          <!-- Details will be loaded here -->
+        </div>
+      </div>
+      <div class="modal-footer border-secondary">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          Close
+        </button>
+        <button type="button" class="btn btn-primary">
+          <i class="bi bi-download me-2"></i> Download GDTF
+        </button>
+      </div>
+    </div>
   </div>
 </div>
