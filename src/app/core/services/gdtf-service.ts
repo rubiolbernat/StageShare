@@ -1,15 +1,16 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { gdtfFixtures, gdtfChannels } from '../models/gdtf_db.model';
-import { Observable, of } from 'rxjs';
-import { delay, map } from 'rxjs/operators';
-import { environment } from '../../../enviorments/environment.msi';
+import { Observable } from 'rxjs';
+import { tap, catchError } from 'rxjs/operators';
+import { environment } from '../../../enviorments/environment';
+import { of } from 'rxjs'; // Import 'of' for error handling
 
 @Injectable({
   providedIn: 'root'
 })
 export class GdtfDataService {
-  private apiUrl = environment.apiUrl + "gdtf"
+  private apiUrl = environment.apiUrl + "/gdtf/gdtf_api.php";
 
   constructor(private http: HttpClient) { }
 
@@ -18,108 +19,79 @@ export class GdtfDataService {
     manufacturer?: string;
     creator?: string;
   }): Observable<gdtfFixtures[]> {
-    // Implementació real amb HTTP
-    /* return this.http.get<gdtfFixtures[]>(`${this.apiUrl}/fixtures`, { params: filters })
-       .pipe(
-       // delay(1000) // Simula retard de xarxa (opcional)
-     );*/
 
-    // Implementació temporal amb dummies (eliminar quan tinguis l'API real)
+    // Netejem els filtres per no enviar paràmetres buits
+    let params = new HttpParams();
+    if (filters.name) {
+      params = params.set('name', filters.name);
+    }
+    if (filters.manufacturer) {
+      params = params.set('manufacturer', filters.manufacturer);
+    }
+    if (filters.creator) {
+      params = params.set('creator', filters.creator);
+    }
 
-    return of([
-      {
-        id: 1,
-        rid: 1,
-        name:  'Quantum Wash',
-        manufacturer: 'Robe',
-        creator:  'gdtf_lighting_designer',
-        version: '1.2',
-        rating: 4.8,
-        thumbnail: 'https://www.earpro.es/33543-large_default/robe-megapointe.jpg',
-        modes: [
-          {
-            id: 1,
-            fixture_id: 1,
-            name: 'Full Mode',
-            description: 'Full control mode with all channels',
-            dmx_footprint: 37,
-            channels: [
-              { id: 1, mode_id: 1, channel_number: 1, name: 'Dimmer', attribute: 'DIMMER' },
-              { id: 2, mode_id: 1, channel_number: 2, name: 'Pan', attribute: 'PAN' },
-              { id: 3, mode_id: 1, channel_number: 3, name: 'Pan Fine', attribute: 'PAN FINE' },
-              { id: 4, mode_id: 1, channel_number: 4, name: 'Tilt', attribute: 'TILT' }
-            ]
-          },
-          {
-            id: 2,
-            fixture_id: 1,
-            name: 'Basic Mode',
-            description: 'Simplified control mode',
-            dmx_footprint: 24,
-            channels: [
-              { id: 5, mode_id: 2, channel_number: 1, name: 'Dimmer', attribute: 'DIMMER' },
-              { id: 6, mode_id: 2, channel_number: 2, name: 'Pan', attribute: 'PAN' },
-              { id: 7, mode_id: 2, channel_number: 3, name: 'Tilt', attribute: 'TILT' }
-            ]
+    const url = `${this.apiUrl}?action=getFixtures`;
+
+    // --- LOG DE LA PETICIÓ ---
+    console.log(`[Angular Service] Sending GET request to: ${url} with params:`, filters);
+
+    return this.http.get<gdtfFixtures[]>(url, { params: params })
+      .pipe(
+        // --- LOG DE LA RESPOSTA ---
+        tap(response => {
+          console.log('[Angular Service] Received response for searchFixtures:', response);
+          if (response.length === 0) {
+            console.warn('[Angular Service] The search returned 0 results.');
           }
-        ]
-      },
-      {
-        id: 2,
-        rid: 2,
-        name: 'Sharpy',
-        manufacturer:  'Clay Paky',
-        creator: 'gdtf_creator',
-        version: '2.0',
-        rating: 1.5,
-        thumbnail: 'https://www.bki.co.id/foto_berita/no_pict.jpg',
-        modes: [
-          {
-            id: 3,
-            fixture_id: 2,
-            name: 'Extended',
-            description: 'Extended control mode',
-            dmx_footprint: 20,
-            channels: [
-              { id: 8, mode_id: 3, channel_number: 1, name: 'Dimmer', attribute: 'DIMMER' },
-              { id: 9, mode_id: 3, channel_number: 2, name: 'Pan', attribute: 'PAN' },
-              { id: 10, mode_id: 3, channel_number: 3, name: 'Tilt', attribute: 'TILT' }
-            ]
-          }
-        ]
-      }
-    ]).pipe(delay(800));
-
+        }),
+        // --- GESTIÓ D'ERRORS ---
+        catchError(error => {
+          console.error('[Angular Service] Error in searchFixtures HTTP call:', error);
+          return of([]); // Retorna un array buit en cas d'error per no trencar l'aplicació
+        })
+      );
   }
 
   searchByChannels(channels: gdtfChannels[]): Observable<gdtfFixtures[]> {
     const validChannels = channels.filter(c => c.channel_number || c.attribute || c.name);
+    const url = `${this.apiUrl}?action=getFixturesByChannels`;
+    const payload = { channels: validChannels };
 
-    /*return this.http.post<gdtfFixtures[]>(`${this.apiUrl}/fixtures/by-channels`, {
-      channels: validChannels
-    });*/
+    // --- LOG DE LA PETICIÓ ---
+    console.log(`[Angular Service] Sending POST request to: ${url} with payload:`, payload);
 
-    // Implementació temporal amb dummies (eliminar quan tinguis l'API real)
-
-    return of([
-      {
-        id: 3,
-        rid: 3,
-        name: 'MegaPointe',
-        manufacturer: 'Martin',
-        creator: 'gdtf_pro',
-        version: '1.5',
-        rating: 4.7,
-        modes: [],
-        thumbnail: 'https://www.earpro.es/33543-large_default/robe-megapointe.jpg'
-      }
-    ]).pipe(delay(1000));
-
+    return this.http.post<gdtfFixtures[]>(url, payload)
+      .pipe(
+        // --- LOG DE LA RESPOSTA ---
+        tap(response => {
+          console.log('[Angular Service] Received response for searchByChannels:', response);
+          if (response.length === 0) {
+            console.warn('[Angular Service] The channel search returned 0 results.');
+          }
+        }),
+        // --- GESTIÓ D'ERRORS ---
+        catchError(error => {
+          console.error('[Angular Service] Error in searchByChannels HTTP call:', error);
+          return of([]);
+        })
+      );
   }
 
-  downloadFixture(id: number): Observable<void> {
-    return this.http.get<void>(`${this.apiUrl}/fixtures/${id}/download`, {
-      responseType: 'blob' as 'json'
-    });
+  downloadFixture(rid: number): Observable<Blob> {
+    const url = `${this.apiUrl}?action=getFixtureDownload&rid=${rid}`;
+
+    // --- LOG DE LA PETICIÓ ---
+    console.log(`[Angular Service] Requesting download from: ${url}`);
+
+    return this.http.get(url, { responseType: 'blob' })
+      .pipe(
+        tap(() => console.log('[Angular Service] Blob received for download.')),
+        catchError(error => {
+          console.error('[Angular Service] Error in downloadFixture HTTP call:', error);
+          throw error; // Rellancem l'error perquè el component el pugui gestionar
+        })
+      );
   }
 }

@@ -3,6 +3,7 @@ import { GdtfDataService } from '../../core/services/gdtf-service';
 import { gdtfFixtures, gdtfMode, gdtfChannels } from '../../core/models/gdtf_db.model';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { environment } from '../../../enviorments/environment.msi';
 
 @Component({
   selector: 'app-fixture-finder',
@@ -13,6 +14,7 @@ import { FormsModule } from '@angular/forms';
 })
 export class FixtureFinder {
   private fixtureService = inject(GdtfDataService);
+  assetUrl = environment.assetsUrl + 'gdtf/';
 
   // Signals for search inputs
   searchName = signal<string>('');
