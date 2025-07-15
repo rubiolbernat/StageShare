@@ -4,6 +4,7 @@
   (window:resize)="onResize($event)"
   [class.expanded]="getAside()"
   [class.mobile]="getAside()"
+  (mouseleave)="closeSubmenus()"
 >
   <div class="logo">
     <div class="logo-icon" routerLink="/">
@@ -68,6 +69,7 @@
       id="reports-item"
       [class.expanded]="getSubmenuState(0)"
       (click)="toggleSubmenu(0)"
+      (mouseenter)="openSubmenu(0)"
       routerLink="/home"
       routerLinkActive="active"
     >
@@ -159,27 +161,12 @@
       id="management-item"
       [class.expanded]="getSubmenuState(1)"
       (click)="toggleSubmenu(1)"
+      (mouseenter)="openSubmenu(1)"
     >
       <div class="menu-icon">
-        <i class="fas"
-          ><svg
-            class="w-[23px] h-[23px] text-gray-800 dark:text-white"
-            aria-hidden="true"
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            fill="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              fill-rule="evenodd"
-              d="M9.586 2.586A2 2 0 0 1 11 2h2a2 2 0 0 1 2 2v.089l.473.196.063-.063a2.002 2.002 0 0 1 2.828 0l1.414 1.414a2 2 0 0 1 0 2.827l-.063.064.196.473H20a2 2 0 0 1 2 2v2a2 2 0 0 1-2 2h-.089l-.196.473.063.063a2.002 2.002 0 0 1 0 2.828l-1.414 1.414a2 2 0 0 1-2.828 0l-.063-.063-.473.196V20a2 2 0 0 1-2 2h-2a2 2 0 0 1-2-2v-.089l-.473-.196-.063.063a2.002 2.002 0 0 1-2.828 0l-1.414-1.414a2 2 0 0 1 0-2.827l.063-.064L4.089 15H4a2 2 0 0 1-2-2v-2a2 2 0 0 1 2-2h.09l.195-.473-.063-.063a2 2 0 0 1 0-2.828l1.414-1.414a2 2 0 0 1 2.827 0l.064.063L9 4.089V4a2 2 0 0 1 .586-1.414ZM8 12a4 4 0 1 1 8 0 4 4 0 0 1-8 0Z"
-              clip-rule="evenodd"
-            />
-          </svg>
-        </i>
+        <i class="bi bi-tools"></i>
       </div>
-      <div class="menu-text">Gestió</div>
+      <div class="menu-text">Toolbox</div>
       <div class="menu-arrow">
         <i class="fas fa-chevron-right"
           ><svg
@@ -202,17 +189,22 @@
         </i>
       </div>
       <div class="submenu">
-        <div class="submenu-item">
+        <div
+          class="submenu-item"
+          routerLink="/toolbox/distribution"
+          routerLinkActive="active"
+          [routerLinkActiveOptions]="{ exact: true }"
+        >
           <div class="submenu-icon"><i class="fas fa-circle"></i></div>
-          Usuaris
+          Distribution tool
         </div>
         <div class="submenu-item">
           <div class="submenu-icon"><i class="fas fa-circle"></i></div>
-          Permisos
+          Weight calculator
         </div>
         <div class="submenu-item">
           <div class="submenu-icon"><i class="fas fa-circle"></i></div>
-          Configuració
+          Electricity calculator
         </div>
       </div>
     </div>
@@ -288,184 +280,3 @@
     </div>
   </div>
 </aside>
-<script>
-  // Tancar menú en fer clic fora en mòbil
-  document.addEventListener("click", (e) => {
-    if (
-      window.innerWidth <= 768 &&
-      !aside.contains(e.target) &&
-      e.target !== mobileMenuBtn
-    ) {
-      aside.classList.remove("active");
-    }
-  });
-
-  // Submenús del menú lateral
-  const menuItemsWithSubmenu = document.querySelectorAll(
-    ".menu-item:has(.submenu)"
-  );
-
-  menuItemsWithSubmenu.forEach((item) => {
-    item.addEventListener("click", (e) => {
-      if (e.target.closest(".submenu")) return;
-      item.classList.toggle("expanded");
-    });
-  });
-
-  // Settings modal
-  const settingsBtn = document.getElementById("settings-btn");
-  const settingsModal = document.getElementById("settings-modal");
-  const closeSettings = document.getElementById("close-settings");
-  settingsBtn.addEventListener("click", () =>
-    settingsModal.classList.add("active")
-  );
-  closeSettings.addEventListener("click", () =>
-    settingsModal.classList.remove("active")
-  );
-
-  // Notifications modal
-  const notificationsBtn = document.getElementById("notifications-btn");
-  const notificationsModal = document.getElementById("notifications-modal");
-  const closeNotifications = document.getElementById("close-notifications");
-  notificationsBtn.addEventListener("click", () =>
-    notificationsModal.classList.add("active")
-  );
-  closeNotifications.addEventListener("click", () =>
-    notificationsModal.classList.remove("active")
-  );
-
-  // Close modals when clicking outside
-  window.addEventListener("click", (e) => {
-    if (e.target === settingsModal) settingsModal.classList.remove("active");
-    if (e.target === notificationsModal)
-      notificationsModal.classList.remove("active");
-  });
-
-  // Theme switcher
-  const themeOptions = document.querySelectorAll(".theme-option");
-  themeOptions.forEach((option) => {
-    option.addEventListener("click", () => {
-      themeOptions.forEach((opt) => opt.classList.remove("active"));
-      option.classList.add("active");
-      const theme = option.dataset.theme;
-      if (theme === "dark") {
-        document.body.classList.add("dark-mode");
-        localStorage.setItem("theme", "dark");
-      } else if (theme === "light") {
-        document.body.classList.remove("dark-mode");
-        localStorage.setItem("theme", "light");
-      } else {
-        if (
-          window.matchMedia &&
-          window.matchMedia("(prefers-color-scheme: dark)").matches
-        ) {
-          document.body.classList.add("dark-mode");
-        } else {
-          document.body.classList.remove("dark-mode");
-        }
-        localStorage.setItem("theme", "system");
-      }
-    });
-  });
-
-  // Check for saved theme preference
-  const savedTheme = localStorage.getItem("theme");
-  if (
-    savedTheme === "dark" ||
-    (savedTheme === "system" &&
-      window.matchMedia &&
-      window.matchMedia("(prefers-color-scheme: dark)").matches)
-  ) {
-    document.body.classList.add("dark-mode");
-    document.querySelector(".theme-dark").classList.add("active");
-    document.querySelector(".theme-light").classList.remove("active");
-    document.querySelector(".theme-system").classList.remove("active");
-  } else if (savedTheme === "system") {
-    document.querySelector(".theme-system").classList.add("active");
-    document.querySelector(".theme-light").classList.remove("active");
-    document.querySelector(".theme-dark").classList.remove("active");
-  }
-
-  window
-    .matchMedia("(prefers-color-scheme: dark)")
-    .addEventListener("change", (e) => {
-      if (localStorage.getItem("theme") === "system") {
-        if (e.matches) document.body.classList.add("dark-mode");
-        else document.body.classList.remove("dark-mode");
-      }
-    });
-
-  // Tab functionality
-  const tabs = document.querySelectorAll(".tab");
-  const tabCloseButtons = document.querySelectorAll(".tab-close");
-
-  tabs.forEach((tab) => {
-    tab.addEventListener("click", (e) => {
-      if (e.target.closest(".tab-close")) return;
-      tabs.forEach((t) => t.classList.remove("active"));
-      tab.classList.add("active");
-    });
-  });
-
-  tabCloseButtons.forEach((button) => {
-    button.addEventListener("click", (e) => {
-      e.stopPropagation();
-      const tab = e.target.closest(".tab");
-      if (
-        tab.classList.contains("unsaved") &&
-        !confirm("Hi ha canvis no guardats. Esteu segur que voleu tancar?")
-      ) {
-        return;
-      }
-      tab.remove();
-      if (tab.classList.contains("active")) {
-        const remainingTabs = document.querySelectorAll(".tab");
-        if (remainingTabs.length > 0) {
-          remainingTabs[0].classList.add("active");
-        }
-      }
-      updateScrollArrows(); // NOU: Actualitza les fletxes després de tancar una pestanya
-    });
-  });
-
-  // --- NOU CODI PER A LES FLETXES DE SCROLL DELS TABS ---
-  const tabsContainer = document.getElementById("tabs-container");
-  const scrollLeftBtn = document.getElementById("scroll-left-btn");
-  const scrollRightBtn = document.getElementById("scroll-right-btn");
-
-  function updateScrollArrows() {
-    if (!tabsContainer) return;
-
-    const maxScrollLeft = tabsContainer.scrollWidth - tabsContainer.clientWidth;
-
-    // Mostra o amaga la fletxa esquerra
-    scrollLeftBtn.style.display =
-      tabsContainer.scrollLeft > 1 ? "flex" : "none";
-
-    // Mostra o amaga la fletxa dreta
-    scrollRightBtn.style.display =
-      tabsContainer.scrollLeft < maxScrollLeft - 1 ? "flex" : "none";
-  }
-
-  // Event listeners per als botons de scroll
-  scrollLeftBtn.addEventListener("click", () => {
-    tabsContainer.scrollLeft -= 200;
-  });
-
-  scrollRightBtn.addEventListener("click", () => {
-    tabsContainer.scrollLeft += 200;
-  });
-
-  // Actualitza les fletxes quan es fa scroll dins del contenidor
-  tabsContainer.addEventListener("scroll", updateScrollArrows);
-
-  // Actualitza les fletxes quan canvia la mida de la finestra
-  window.addEventListener("resize", updateScrollArrows);
-
-  // Observador per quan s'afegeixen o s'eliminen tabs
-  const observer = new MutationObserver(updateScrollArrows);
-  observer.observe(document.querySelector(".tabs"), { childList: true });
-
-  // Crida inicial per comprovar l'estat en carregar la pàgina
-  setTimeout(updateScrollArrows, 200);
-</script>

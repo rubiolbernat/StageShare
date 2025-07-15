@@ -41,6 +41,13 @@ export class Aside {
       return newState;
     });
   }
+  openSubmenu(id: number) {
+    this.Submenu.update(current => {
+      const newState = [...current];
+      newState[id] = true;
+      return newState;
+    });
+  }
 
   closeSubmenus(){
     this.Submenu.set(Array(this.NSubmenus).fill(false));
@@ -49,4 +56,5 @@ export class Aside {
   getSubmenuState(id: number) {
     return this.Submenu()[id]
   }
+
 }

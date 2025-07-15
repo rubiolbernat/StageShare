@@ -1,0 +1,234 @@
+<div class="container py-5">
+  <h1 class="text-center mb-4">Calculadora de Distribució d'Objectes</h1>
+
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <!-- Canvi de 'bg-dark text-light' a 'bg-body-tertiary' per adaptabilitat -->
+      <div class="form-section bg-body-tertiary border rounded p-4 mb-4">
+        <h2 class="mb-4 text-primary">Dades Bàsiques</h2>
+        <div class="row g-3">
+          <div class="col-md-6">
+            <label for="segmentLength" class="form-label"
+              >Longitud del segment (metres)</label
+            >
+            <input
+              type="number"
+              class="form-control"
+              id="segmentLength"
+              [(ngModel)]="segmentLength"
+              step="0.01"
+              min="0.01"
+            />
+          </div>
+          <div class="col-md-6">
+            <label for="objectCount" class="form-label"
+              >Quantitat d'objectes</label
+            >
+            <input
+              type="number"
+              class="form-control"
+              id="objectCount"
+              [(ngModel)]="objectCount"
+              min="1"
+            />
+          </div>
+          <div class="col-md-6">
+            <label for="distributionType" class="form-label"
+              >Tipus de distribució</label
+            >
+            <select
+              class="form-select"
+              id="distributionType"
+              [(ngModel)]="distributionType"
+              (change)="validateDistribution()"
+            >
+              <option value="individual">Individual</option>
+              <option value="pares">Parelles</option>
+              <option value="tercias">Tèrcies</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Canvi de 'bg-dark text-light' a 'bg-body-tertiary' -->
+      <div class="form-section bg-body-tertiary border rounded p-4 mb-4">
+        <h2 class="mb-4 text-primary">Opcions de Distribució</h2>
+        <div class="row g-3">
+          <div class="col-md-6">
+            <label for="startFrom" class="form-label">Punt d'inici</label>
+            <select class="form-select" id="startFrom" [(ngModel)]="startFrom">
+              <option value="start">Inici del segment</option>
+              <option value="center">Centre del segment</option>
+              <option value="end">Final del segment</option>
+            </select>
+          </div>
+          <div class="col-md-6">
+            <label for="direction" class="form-label">Direcció</label>
+            <select class="form-select" id="direction" [(ngModel)]="direction">
+              <option value="forward">Cap endavant</option>
+              <option value="backward">Cap enrere</option>
+              <option value="both">Ambdós costats (des del centre)</option>
+            </select>
+          </div>
+          <div class="col-md-6">
+            <label for="marginStart" class="form-label"
+              >Marge inicial (metres)</label
+            >
+            <div class="input-group">
+              <input
+                type="number"
+                class="form-control margin-input"
+                id="marginStart"
+                [(ngModel)]="marginStart"
+                step="0.01"
+                min="0"
+                (change)="calculateDistribution()"
+              />
+              <span class="input-group-text">m</span>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <label for="marginEnd" class="form-label"
+              >Marge final (metres)</label
+            >
+            <div class="input-group">
+              <input
+                type="number"
+                class="form-control margin-input"
+                id="marginEnd"
+                [(ngModel)]="marginEnd"
+                step="0.01"
+                min="0"
+                (change)="calculateDistribution()"
+              />
+              <span class="input-group-text">m</span>
+            </div>
+          </div>
+          <div class="col-12">
+            <div class="form-check">
+              <input
+                class="form-check-input"
+                type="checkbox"
+                id="includeEdges"
+                [(ngModel)]="includeEdges"
+              />
+              <label class="form-check-label" for="includeEdges">
+                Incloure objectes als extrems
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="d-grid gap-2 mt-4">
+        <button
+          class="btn btn-primary btn-lg"
+          (click)="calculateDistribution()"
+        >
+          Calcular Distribució
+        </button>
+      </div>
+
+      <!-- Secció de resultats actualitzada amb acordió -->
+      @if (results.length > 0) {
+      <div class="result-box mt-4 bg-body-tertiary border rounded p-3">
+        <h2 class="mb-3 text-primary">Resultats</h2> <span class="badge bg-primary">Primary</span>
+        <p>
+          <strong>Distància entre objectes:</strong> {{ spacing.toFixed(2) }}
+          metres
+        </p>
+
+        <div class="accordion" id="resultsAccordion">
+          <div class="accordion-item">
+            <h2 class="accordion-header" id="headingOne">
+              <button
+                class="accordion-button collapsed"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#collapseResults"
+                aria-expanded="false"
+                aria-controls="collapseResults"
+              >
+                Llista de Posicions dels Objectes
+              </button>
+            </h2>
+            <div
+              id="collapseResults"
+              class="accordion-collapse collapse"
+              aria-labelledby="headingOne"
+              data-bs-parent="#resultsAccordion"
+            >
+              <div class="accordion-body p-0">
+                <ul class="list-group list-group-flush mb-3">
+                  @for (pos of results; track $index) {
+                  <li class="list-group-item">
+                    Object {{ $index + 1 }}: {{ pos.toFixed(2) }} metres
+                    <span class="text-body-secondary"
+                      >(Distància al centre: {{ abs(pos -
+                      segmentLength/2).toFixed(2) }} metres)</span
+                    >
+                  </li>
+                  }
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+        @if (centerObjectInfo) {
+        <div class="mt-3">
+          <p>
+            <strong>{{ centerObjectInfo.label }}:</strong> {{
+            centerObjectInfo.description }}
+          </p>
+          <p>
+            Distància al centre geomètric: {{ centerObjectInfo.distanceToCenter
+            }} metres
+          </p>
+        </div>
+        }
+      </div>
+      } @if (results.length > 0) {
+      <div class="mt-4">
+        <h3 class="mt-4">Visualització</h3>
+        <div class="segment-visualization card border rounded">
+          <div class="segment-line"></div>
+          <div class="center-marker"></div>
+          <div class="center-label">
+            Centre: {{(segmentLength/2).toFixed(2)}}m
+          </div>
+          @if (marginStart > 0) {
+          <div
+            class="margin-overlay"
+            [style.width.%]="(marginStart/segmentLength*100)"
+          ></div>
+          } @if (marginEnd > 0) {
+          <div
+            class="margin-overlay"
+            [style.width.%]="(marginEnd/segmentLength*100)"
+            style="right: 0"
+          ></div>
+          } @for (pos of results; track $index) {
+          <div
+            class="object-marker"
+            [style.left.%]="(pos / segmentLength) * 100"
+          >
+            <div class="object-tooltip">
+              Objecte {{ $index + 1 }}<br />
+              Posició: {{ pos.toFixed(2) }}m<br />
+              Distància al centre: {{ abs(pos - segmentLength/2).toFixed(2) }}m
+            </div>
+          </div>
+          } @for (pos of results; track $index) {
+          <div
+            class="object-label"
+            [style.left.%]="(pos / segmentLength) * 100"
+          >
+            {{ pos.toFixed(1) }}
+          </div>
+          }
+        </div>
+      </div>
+      }
+    </div>
+  </div>
+</div>

@@ -19,19 +19,6 @@ body {
   position: relative;
 }
 
-/* Aside Menu - Versió final amb submenús */
-aside {
-  width: var(--aside-collapsed-width);
-  background-color: var(--aside-bg);
-  color: var(--aside-text);
-  height: 100vh;
-  position: fixed;
-  transition: var(--transition);
-  z-index: 100;
-  overflow: hidden;
-  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
-}
-
 aside.expanded {
   width: var(--aside-width);
 }
@@ -75,7 +62,6 @@ aside:not(.expanded):hover .menu-item {
 .logo-icon {
   font-size: 24px;
   margin-right: 10px;
-  color: var(--primary-color);
   flex-shrink: 0;
 }
 
@@ -110,132 +96,6 @@ aside:not(.expanded):hover .menu-item {
   border-left: 3px solid transparent;
   white-space: nowrap;
   position: relative;
-}
-
-/* ... la resta del teu codi es manté intacte ... */
-
-.menu-item:hover {
-  background-color: rgba(255, 255, 255, 0.1);
-}
-
-.menu-item.active {
-  background-color: rgba(255, 255, 255, 0.1);
-  border-left: 3px solid var(--primary-color);
-}
-
-.menu-icon {
-  font-size: 18px;
-  margin-right: 15px;
-  flex-shrink: 0;
-}
-
-.menu-text {
-  font-size: 14px;
-  transition: var(--transition);
-  display: none;
-  flex-grow: 1;
-}
-
-.menu-arrow {
-  font-size: 12px;
-  transition: var(--transition);
-  display: none;
-}
-
-.menu-item.expanded .menu-arrow {
-  transform: rotate(90deg);
-}
-
-.submenu {
-    max-height: 0;
-    overflow: hidden;
-    /* Fem la transició més suau i que també afecti al padding */
-    transition: max-height 0.3s ease-in-out, padding 0.3s ease-in-out;
-    background-color: rgba(0, 0, 0, 0.2); /* Fons una mica més fosc per crear profunditat */
-    /* Comença sense padding vertical. El padding esquerre ja indenta el bloc sencer */
-    padding: 0 0px 0 30px;
-    margin-right: -20px;
-    width: 100%;
-    border-radius: 0px 0px 16px 16px;
-}
-
-.menu-item.expanded .submenu {
-  max-height: 500px;
-}
-
-.submenu-item {
-    /* Eliminem el padding gegant i el fem uniforme */
-    padding: 10px 15px;
-    cursor: pointer;
-    font-size: 13px;
-    display: flex;
-    align-items: center;
-    border-radius: 5px; /* Vores arrodonides! */
-    transition: all 0.2s ease; /* Transició suau per a tot */
-    margin-bottom: 2px; /* Petita separació entre ells */
-}
-.menu-item.expanded .submenu {
-    max-height: 500px; /* Això es manté igual */
-    /* En expandir-se, afegim el padding vertical */
-    padding: 10px 15px 10px 30px;
-    margin-top: 5px; /* Petita separació de l'element pare */
-    margin-bottom: 5px;
-}
-
-.submenu-item:hover {
-    /* Un efecte hover més subtil */
-    background-color: rgba(255, 255, 255, 0.1);
-}
-
-.submenu-item.active {
-    /* L'actiu ara és molt més visual */
-    background-color: var(--primary-color);
-    color: white;
-    font-weight: 500;
-}
-
-/* Important: quan l'ítem està actiu, la icona també ha de ser blanca */
-.submenu-item.active .submenu-icon {
-    color: white;
-}
-
-.submenu-icon {
-  margin-right: 10px;
-  font-size: 12px;
-}
-
-.toggle-btn {
-  position: absolute;
-  right: -15px;
-  top: 20px;
-  background-color: var(--primary-color);
-  color: white;
-  border: none;
-  width: 30px;
-  height: 30px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  box-shadow: var(--shadow);
-  z-index: 101;
-  transition: var(--transition);
-}
-
-.toggle-btn:hover {
-  transform: scale(1.1);
-}
-
-/* Main Content */
-main {
-  flex: 1;
-  margin-left: var(--aside-collapsed-width);
-  transition: var(--transition);
-  display: flex;
-  flex-direction: column;
-  height: 100vh;
-  overflow: hidden;
 }
 
 aside.expanded+main {

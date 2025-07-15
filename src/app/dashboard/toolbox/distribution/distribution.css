@@ -1,0 +1,132 @@
+:host {
+  display: block;
+}
+
+.result-box {
+  padding: 15px;
+  margin-top: 20px;
+}
+
+.form-section {
+  margin-bottom: 30px;
+}
+
+h2 {
+  color: #0d6efd;
+}
+
+.segment-visualization {
+  height: 120px;
+  position: relative;
+  background-color: #343a40;
+  border-radius: 8px;
+  margin-top: 20px;
+  overflow: visible;
+}
+
+.segment-line {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background-color: #adb5bd;
+}
+
+.center-marker {
+  position: absolute;
+  top: 30%;
+  left: 50%;
+  width: 2px;
+  height: 40%;
+  background-color: #dc3545;
+}
+
+.center-label {
+  position: absolute;
+  top: 20%;
+  left: 50%;
+  transform: translateX(-50%);
+  color: #dc3545;
+  font-size: 0.8rem;
+}
+
+.margin-overlay {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  background-color: rgba(255, 255, 255, 0.05);
+  background: repeating-linear-gradient(
+    -55deg,
+    #222,
+    #222 10px,
+    #333 10px,
+    #333 20px
+  );
+}
+
+.object-marker {
+  position: absolute;
+  top: 40%;
+  width: 12px;
+  height: 24px;
+  background-color: #0d6efd;
+  transform: translateX(-50%);
+  cursor: pointer;
+  transition: all 0.2s;
+  border-radius: 2px;
+  z-index: 10;
+}
+
+.object-marker:hover {
+  background-color: #0b5ed7;
+  height: 30px;
+  top: 38%;
+  z-index: 101;
+}
+
+.object-label {
+  position: absolute;
+  top: 70%;
+  transform: translateX(-50%);
+  font-size: 0.8rem;
+  color: #adb5bd;
+}
+
+.object-tooltip {
+  position: absolute;
+  bottom: calc(100% + 10px);
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #212529;
+  color: white;
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  white-space: nowrap;
+  display: none;
+  z-index: 100;
+  min-width: 180px;
+  text-align: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  border: 1px solid #495057;
+}
+
+.object-tooltip::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: #212529 transparent transparent transparent;
+}
+
+.object-marker:hover .object-tooltip {
+  display: block;
+}
+
+.margin-input {
+  max-width: 100px;
+}
