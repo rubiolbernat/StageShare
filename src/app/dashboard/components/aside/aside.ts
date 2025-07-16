@@ -57,4 +57,9 @@ export class Aside {
     return this.Submenu()[id]
   }
 
+  leaveAside(){
+    if (!this.LayoutService.getisAside()) {
+      this.closeSubmenus();
+    }
+  }
 }

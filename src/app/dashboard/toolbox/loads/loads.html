@@ -1,0 +1,221 @@
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-10 col-xl-8">
+      <div class="card shadow-lg border-secondary">
+        <div class="card-header text-center bg-primary text-white no-print">
+          <h1 class="h3 mb-0">Calculadora de Distribució de Pes</h1>
+        </div>
+        <div class="card-body p-4">
+          <!-- SECCIÓ SUPERIOR: FORMULARI + DIAGRAMA DE PREVISUALITZACIÓ (NO IMPRIMIBLE) -->
+          <div class="no-print">
+            <form (ngSubmit)="calculateDistribution()">
+              <div class="row g-4">
+                <!-- Columna del formulari -->
+                <div class="col-md-6">
+                  <div class="mb-3">
+                    <label for="totalWeight" class="form-label"
+                      >Pes total (kg):</label
+                    >
+                    <input
+                      type="number"
+                      class="form-control"
+                      id="totalWeight"
+                      required
+                      min="1"
+                      [(ngModel)]="totalWeight"
+                      name="totalWeight"
+                      (ngModelChange)="onFormChange()"
+                    />
+                  </div>
+                  <div class="mb-3">
+                    <label for="supportPoints" class="form-label"
+                      >Punts de suport:</label
+                    >
+                    <select
+                      class="form-select"
+                      id="supportPoints"
+                      required
+                      [(ngModel)]="supportPoints"
+                      name="supportPoints"
+                      (ngModelChange)="onFormChange()"
+                    >
+                      <option [ngValue]="null" disabled>Selecciona...</option>
+                      <option *ngFor="let i of [1,2,3,4,5,6,7,8]" [value]="i">
+                        {{ i }} punt{{ i > 1 ? 's' : '' }}
+                      </option>
+                    </select>
+                  </div>
+                  <div>
+                    <label class="form-label">Tipus de càrrega:</label>
+                    <div class="form-check">
+                      <input
+                        class="form-check-input"
+                        type="radio"
+                        name="loadType"
+                        id="distributedLoad"
+                        value="distributed"
+                        [(ngModel)]="loadType"
+                        (ngModelChange)="onFormChange()"
+                      />
+                      <label class="form-check-label" for="distributedLoad"
+                        >Distribuïda</label
+                      >
+                    </div>
+                    <div class="form-check">
+                      <input
+                        class="form-check-input"
+                        type="radio"
+                        name="loadType"
+                        id="pointLoad"
+                        value="point"
+                        [(ngModel)]="loadType"
+                        (ngModelChange)="onFormChange()"
+                      />
+                      <label class="form-check-label" for="pointLoad"
+                        >Puntual al centre</label
+                      >
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Columna del diagrama de %, al costat del formulari i NO imprimible -->
+                <div class="col-md-6">
+                  <label class="form-label">Previsualització (%):</label>
+                  <div
+                    class="distribution-diagram card justify-content-center p-3"
+                  >
+                    <div
+                      *ngIf="!supportPoints"
+                      class="text-center text-muted small"
+                    >
+                      Selecciona els punts de suport per veure el diagrama.
+                    </div>
+                    <div *ngIf="supportPoints" class="diagram-container">
+                      <div class="load-bar"></div>
+                      <div class="points-wrapper">
+                        <!-- AQUEST BUCLE ÉS LA CLAU: SEMPRE MOSTRA TOTS ELS PUNTS -->
+                        <div
+                          *ngFor="let percentage of previewPercentages; let i = index"
+                          class="point-visualization"
+                          [class.central-point]="isCentralPoint(i)"
+                          [class.unloaded]="percentage === 0"
+                        >
+                          <div class="point-arrow"></div>
+                          <div class="point-label">{{ i + 1 }}</div>
+                          <div class="point-value">
+                            {{ percentage.toFixed(0) }}%
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <button type="submit" class="btn btn-primary w-100 mt-4 py-2">
+                Calcular Distribució
+              </button>
+            </form>
+            <hr class="my-4" *ngIf="showResults" />
+          </div>
+
+          <!-- ======================================================= -->
+          <!-- ÀREA IMPRIMIBLE: DIAGRAMA DE KG I RESULTATS DETALLATS     -->
+          <!-- ======================================================= -->
+          <div class="printable-area" *ngIf="showResults">
+            <!-- Resum del càlcul -->
+            <!-- Resum del càlcul - amb presència visual -->
+            <div class="row text-center mb-4">
+              <div class="col-12">
+                <div class="border rounded py-3 px-2 shadow-sm">
+                  <div class="row">
+                    <div class="col">
+                      <div class="text-secondary small">Pes total</div>
+                      <div class="fs-5 fw-semibold">
+                        {{ totalWeight?.toFixed(2) }} kg
+                      </div>
+                    </div>
+                    <div class="col">
+                      <div class="text-secondary small">Punts de suport</div>
+                      <div class="fs-5 fw-semibold">{{ supportPoints }}</div>
+                    </div>
+                    <div class="col">
+                      <div class="text-secondary small">Tipus de càrrega</div>
+                      <div class="fs-6 fw-semibold">
+                        {{ loadType === 'distributed' ? 'Distribuïda' : 'Puntual al centre' }}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Diagrama de Pesos (kg) -->
+            <h4 class="mb-3">Diagrama de Càrrega (kg)</h4>
+            <div
+              class="distribution-diagram card justify-content-center p-3 mb-4"
+            >
+              <div class="diagram-container">
+                <div class="load-bar"></div>
+                <div class="points-wrapper">
+                  <div
+                    *ngFor="let result of calculatedDistribution; let i = index"
+                    class="point-visualization"
+                    [class.central-point]="isCentralPoint(i)"
+                    [class.unloaded]="result.weight === 0"
+                  >
+                    <div class="point-arrow"></div>
+                    <div class="point-label">{{ i + 1 }}</div>
+                    <div class="point-value">
+                      {{ result.weight.toFixed(1) }} kg
+                      <p>{{ result.percentage }}%</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Taula de resultats -->
+            <h4 class="border-bottom pb-2 mb-3">Resultats Detallats</h4>
+            <div class="row g-3">
+              <div
+                *ngFor="let result of calculatedDistribution; let i = index"
+                class="col-md-6 col-lg-4"
+              >
+                <div
+                  class="point-result p-2 rounded"
+                  [class.unloaded-point]="result.weight === 0"
+                >
+                  <strong>Punt {{ i + 1 }}:</strong>
+                  <span class="fw-bold">{{ result.weight.toFixed(2) }} kg</span>
+                  <span
+                    class="badge bg-secondary-subtle text-secondary-emphasis rounded-pill"
+                    >{{ result.percentage.toFixed(1) }}%</span
+                  >
+                </div>
+              </div>
+            </div>
+            <hr class="my-4" />
+            <div class="alert alert-warning small">
+              <strong>Nota:</strong> Aquests càlculs es basen en distribucions
+              estàndard de rigging. Sempre verifiqueu els càlculs i consulti amb
+              un enginyer qualificat per a aplicacions crítiques.
+            </div>
+          </div>
+
+          <!-- Botó d'imprimir i nota (NO IMPRIMIBLES) -->
+          <div class="no-print mt-4" *ngIf="showResults">
+            <button
+              (click)="printResults()"
+              type="button"
+              class="btn btn-secondary w-100 mb-3"
+            >
+              <i class="bi bi-printer"></i>
+              Imprimir Resultats
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

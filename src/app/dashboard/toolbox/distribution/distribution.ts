@@ -20,6 +20,8 @@ export class Distribution {
   includeEdges: boolean = true;
   marginStart: number = 0;
   marginEnd: number = 0;
+  // NOU: Propietat per controlar la visualització de les mesures
+  showCenterMeasurements: boolean = false;
 
   results: number[] = [];
   spacing: number = 0;
@@ -109,28 +111,47 @@ export class Distribution {
   }
 
   calculateCenterObjectInfo() {
-    if (this.objectCount <= 1) {
+    // Si no hi ha resultats o menys de dos objectes, no hi ha res a calcular.
+    if (!this.results || this.results.length <= 1) {
       this.centerObjectInfo = null;
       return;
     }
 
+    const geometricCenter = this.segmentLength / 2;
+
+    // Cas per a una quantitat senar d'objectes (hi ha un únic objecte central)
     if (this.objectCount % 2 === 1) {
       const centerIndex = Math.floor(this.objectCount / 2);
       const centerPos = this.results[centerIndex];
+
+      // Determina la descripció segons si es mostren mesures des del centre
+      const description = this.showCenterMeasurements
+        ? `Objecte ${centerIndex + 1} a ${(centerPos - geometricCenter).toFixed(2)} metres (des del centre)`
+        : `Objecte ${centerIndex + 1} a ${centerPos.toFixed(2)} metres (des de l'inici)`;
+
       this.centerObjectInfo = {
         label: 'Objecte central',
-        description: `Objecte ${centerIndex + 1} a ${centerPos.toFixed(2)} metres`,
-        distanceToCenter: Math.abs(centerPos - this.segmentLength / 2).toFixed(2)
+        description: description,
+        distanceToCenter: Math.abs(centerPos - geometricCenter).toFixed(2)
       };
-    } else {
-      const centerLeftIndex = this.objectCount / 2 - 1;
+    }
+    // Cas per a una quantitat parell d'objectes (hi ha dos objectes centrals)
+    else {
       const centerRightIndex = this.objectCount / 2;
+      const centerLeftIndex = centerRightIndex - 1;
       const centerLeftPos = this.results[centerLeftIndex];
       const centerRightPos = this.results[centerRightIndex];
+
+      // Determina la descripció segons si es mostren mesures des del centre
+      const description = this.showCenterMeasurements
+        ? `Objecte ${centerLeftIndex + 1} a ${(centerLeftPos - geometricCenter).toFixed(2)}m i Objecte ${centerRightIndex + 1} a ${(centerRightPos - geometricCenter).toFixed(2)}m (des del centre)`
+        : `Objecte ${centerLeftIndex + 1} a ${centerLeftPos.toFixed(2)}m i Objecte ${centerRightIndex + 1} a ${centerRightPos.toFixed(2)}m (des de l'inici)`;
+
       this.centerObjectInfo = {
         label: 'Objectes centrals',
-        description: `Objecte ${centerLeftIndex + 1} a ${centerLeftPos.toFixed(2)}m i Objecte ${centerRightIndex + 1} a ${centerRightPos.toFixed(2)}m`,
-        distanceToCenter: Math.abs(centerLeftPos - this.segmentLength / 2).toFixed(2)
+        description: description,
+        // La distància al centre geomètric és la mateixa per a tots dos objectes
+        distanceToCenter: Math.abs(centerLeftPos - geometricCenter).toFixed(2)
       };
     }
   }

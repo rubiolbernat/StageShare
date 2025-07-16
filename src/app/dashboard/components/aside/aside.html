@@ -4,7 +4,7 @@
   (window:resize)="onResize($event)"
   [class.expanded]="getAside()"
   [class.mobile]="getAside()"
-  (mouseleave)="closeSubmenus()"
+  (mouseleave)="leaveAside()"
 >
   <div class="logo">
     <div class="logo-icon" routerLink="/">
@@ -162,6 +162,8 @@
       [class.expanded]="getSubmenuState(1)"
       (click)="toggleSubmenu(1)"
       (mouseenter)="openSubmenu(1)"
+      routerLinkActive="active"
+      [routerLinkActiveOptions]="{ exact: false }"
     >
       <div class="menu-icon">
         <i class="bi bi-tools"></i>
@@ -198,7 +200,11 @@
           <div class="submenu-icon"><i class="fas fa-circle"></i></div>
           Distribution tool
         </div>
-        <div class="submenu-item">
+        <div
+          class="submenu-item"
+          routerLink="/toolbox/loaddistribution"
+          routerLinkActive="active"
+        >
           <div class="submenu-icon"><i class="fas fa-circle"></i></div>
           Weight calculator
         </div>

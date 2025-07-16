@@ -19,13 +19,15 @@ export const DASHBOARD_ROUTES: Routes = [
       {
         path: 'venues',
         loadComponent: () => import('./venues/venues').then(m => m.Venues)
-      },{
+      }, {
         path: 'fixturefinder',
         loadComponent: () => import('./fixture-finder/fixture-finder').then(m => m.FixtureFinder)
-      },
-      {
+      }, {
         path: 'toolbox/distribution',
         loadComponent: () => import('./toolbox/distribution/distribution').then(m => m.Distribution)
+      }, {
+        path: 'toolbox/loaddistribution',
+        loadComponent: () => import('./toolbox/loads/loads').then(m => m.Loads)
       }
     ]
   }

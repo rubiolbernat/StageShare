@@ -117,6 +117,20 @@
               </label>
             </div>
           </div>
+          <div class="col-12">
+            <div class="form-check">
+              <input
+                class="form-check-input"
+                type="checkbox"
+                id="showCenterMeasurements"
+                [(ngModel)]="showCenterMeasurements"
+                (change)="calculateCenterObjectInfo()"
+              />
+              <label class="form-check-label" for="showCenterMeasurements">
+                Mostrar mesures des del centre
+              </label>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -132,12 +146,25 @@
       <!-- Secció de resultats actualitzada amb acordió -->
       @if (results.length > 0) {
       <div class="result-box mt-4 bg-body-tertiary border rounded p-3">
-        <h2 class="mb-3 text-primary">Resultats</h2> <span class="badge bg-primary">Primary</span>
+        <h2 class="mb-3 text-primary">Resultats</h2>
         <p>
-          <strong>Distància entre objectes:</strong> {{ spacing.toFixed(2) }}
+          <strong>Distància entre objectes: </strong>
+          <span class="badge bg-danger">{{ spacing.toFixed(2) }}</span>
           metres
         </p>
 
+        @if (centerObjectInfo) {
+        <div class="mt-3">
+          <p>
+            <strong>{{ centerObjectInfo.label }}:</strong> {{
+            centerObjectInfo.description }}
+          </p>
+          <p>
+            Distància al centre geomètric: {{ centerObjectInfo.distanceToCenter
+            }} metres
+          </p>
+        </div>
+        }
         <div class="accordion" id="resultsAccordion">
           <div class="accordion-item">
             <h2 class="accordion-header" id="headingOne">
@@ -162,11 +189,12 @@
                 <ul class="list-group list-group-flush mb-3">
                   @for (pos of results; track $index) {
                   <li class="list-group-item">
-                    Object {{ $index + 1 }}: {{ pos.toFixed(2) }} metres
-                    <span class="text-body-secondary"
-                      >(Distància al centre: {{ abs(pos -
-                      segmentLength/2).toFixed(2) }} metres)</span
-                    >
+                    Objecte {{ $index + 1 }}: @if (showCenterMeasurements) {
+                    <strong>{{ (pos - segmentLength/2).toFixed(2) }}</strong>
+                    metres
+                    <span class="badge bg-secondary small">(del centre)</span> }
+                    @else { <strong>{{ pos.toFixed(2) }}</strong> metres
+                    <span class="badge bg-secondary small">(de l'inici)</span> }
                   </li>
                   }
                 </ul>
@@ -174,18 +202,6 @@
             </div>
           </div>
         </div>
-        @if (centerObjectInfo) {
-        <div class="mt-3">
-          <p>
-            <strong>{{ centerObjectInfo.label }}:</strong> {{
-            centerObjectInfo.description }}
-          </p>
-          <p>
-            Distància al centre geomètric: {{ centerObjectInfo.distanceToCenter
-            }} metres
-          </p>
-        </div>
-        }
       </div>
       } @if (results.length > 0) {
       <div class="mt-4">
@@ -214,8 +230,11 @@
           >
             <div class="object-tooltip">
               Objecte {{ $index + 1 }}<br />
-              Posició: {{ pos.toFixed(2) }}m<br />
-              Distància al centre: {{ abs(pos - segmentLength/2).toFixed(2) }}m
+              @if (showCenterMeasurements) { Posició: {{ (pos -
+              segmentLength/2).toFixed(2) }}m (des del centre)<br />
+              Pos. absoluta: {{ pos.toFixed(2) }}m } @else { Posició: {{
+              pos.toFixed(2) }}m<br />
+              Dist. al centre: {{ abs(pos - segmentLength/2).toFixed(2) }}m }
             </div>
           </div>
           } @for (pos of results; track $index) {
@@ -223,7 +242,8 @@
             class="object-label"
             [style.left.%]="(pos / segmentLength) * 100"
           >
-            {{ pos.toFixed(1) }}
+            @if (showCenterMeasurements) { {{ (pos - segmentLength/2).toFixed(1)
+            }} } @else { {{ pos.toFixed(1) }} }
           </div>
           }
         </div>

@@ -1,0 +1,127 @@
+:host {
+  --diagram-bar-bg: #6c757d;
+  --diagram-arrow-color: #0d6efd;
+  --diagram-central-arrow-color: #dc3545;
+  --diagram-unloaded-arrow-color: #adb5bd;
+  --diagram-text-color: var(--bs-body-color);
+  --point-result-bg: var(--bs-secondary-bg);
+  --preview-bg: var(--bs-tertiary-bg);
+}
+.distribution-diagram {
+  background-color: var(--preview-bg);
+  border: 1px dashed var(--bs-border-color);
+  min-height: 140px;
+}
+.diagram-container {
+  position: relative;
+  width: 90%;
+  margin: 1rem auto;
+}
+.load-bar {
+  width: 100%;
+  height: 8px;
+  background-color: var(--diagram-bar-bg);
+  border-radius: 4px;
+  position: absolute;
+  top: 50%;
+  transform: translateY(80%);
+}
+.points-wrapper {
+  display: flex;
+  justify-content: space-around;
+  position: relative;
+}
+.point-visualization {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  color: var(--diagram-text-color);
+}
+.point-arrow {
+  width: 0;
+  height: 0;
+  border-left: 10px solid transparent;
+  border-right: 10px solid transparent;
+  border-top: 15px solid var(--diagram-arrow-color);
+}
+.point-label {
+  font-size: 0.8em;
+  font-weight: bold;
+  margin-top: 0px;
+}
+.point-value {
+  padding-top: 0%;
+  font-size: 0.9em;
+}
+.point-visualization.central-point .point-arrow {
+  border-top-color: var(--diagram-central-arrow-color);
+}
+.point-visualization.unloaded .point-arrow {
+  border-top-color: var(--diagram-unloaded-arrow-color);
+}
+.point-visualization.unloaded .point-label,
+.point-visualization.unloaded .point-value {
+  color: var(--bs-secondary-color);
+}
+.point-result {
+  background-color: var(--point-result-bg);
+  border: 1px solid var(--bs-border-color-translucent);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.point-result.unloaded-point {
+  background-color: transparent;
+  border-style: dashed;
+  color: var(--bs-secondary-color);
+}
+.point-result.unloaded-point .fw-bold,
+.point-result.unloaded-point .badge {
+  color: var(--bs-secondary-color) !important;
+  background-color: var(--bs-tertiary-bg) !important;
+}
+
+/* ================================================== */
+/* ESTILS D'IMPRESSIÓ CORRECTES I FINALS              */
+/* ================================================== */
+@media print {
+  /* Oculta TOT el que no ha d'anar a la impressió */
+  .no-print {
+    display: none !important;
+  }
+
+  /* Reseteja estils per a una impressió neta */
+  body,
+  .card,
+  .card-body {
+    background: #fff !important;
+    box-shadow: none !important;
+    border: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+  .printable-area {
+    display: block !important;
+  }
+  .distribution-diagram,
+  .point-result,
+  .badge {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+  .distribution-diagram {
+    border: 1px solid #ccc !important;
+    background-color: #f8f9fa !important;
+    page-break-inside: avoid;
+  }
+  .row {
+    display: flex !important;
+  }
+  .col-md-6 {
+    width: 50% !important;
+  }
+  .col-lg-4 {
+    width: 33.33% !important;
+  }
+}
