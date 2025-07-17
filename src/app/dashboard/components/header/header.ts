@@ -1,9 +1,10 @@
 import { Component, inject, signal } from '@angular/core';
 import { DashLayoutService } from '../../../core/services/dash-layout-service';
+import { Tabs } from '../tabs/tabs';
 
 @Component({
   selector: 'app-header',
-  imports: [],
+  imports: [Tabs],
   templateUrl: './header.html',
   styleUrl: './header.css'
 })

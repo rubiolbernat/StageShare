@@ -79,7 +79,6 @@
 .point-result.unloaded-point .fw-bold,
 .point-result.unloaded-point .badge {
   color: var(--bs-secondary-color) !important;
-  background-color: var(--bs-tertiary-bg) !important;
 }
 
 /* ================================================== */

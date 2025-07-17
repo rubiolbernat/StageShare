@@ -1,0 +1,526 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  transition: var(--transition);
+  overflow: hidden;
+}
+
+.app-container {
+  display: flex;
+  min-height: 100vh;
+  transition: var(--transition);
+  position: relative;
+}
+
+aside.expanded {
+  width: var(--aside-width);
+}
+
+aside.expanded .menu-text,
+aside.expanded .logo-text,
+aside.expanded .menu-arrow {
+  display: inline-block;
+}
+
+aside.expanded .menu-item {
+  justify-content: flex-start;
+}
+
+/* Hover effect - Flota sobre el contingut */
+aside:not(.expanded):hover {
+  width: var(--aside-width);
+  box-shadow: 5px 0 15px rgba(0, 0, 0, 0.2);
+  z-index: 101;
+}
+
+aside:not(.expanded):hover .menu-text,
+aside:not(.expanded):hover .logo-text,
+aside:not(.expanded):hover .menu-arrow {
+  display: inline-block;
+}
+
+aside:not(.expanded):hover .menu-item {
+  justify-content: flex-start;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  padding: 20px;
+  height: var(--header-height);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  white-space: nowrap;
+}
+
+.logo-icon {
+  font-size: 24px;
+  margin-right: 10px;
+  flex-shrink: 0;
+}
+
+.logo-text {
+  font-size: 18px;
+  font-weight: bold;
+  transition: var(--transition);
+  display: none;
+  white-space: nowrap;
+}
+
+.menu {
+  padding: 20px 0;
+  overflow-y: auto;
+  height: calc(100vh - var(--header-height));
+}
+
+/* ... el teu codi anterior ... */
+
+.menu-item {
+  display: flex;
+  /* align-items: center;  <-- COMENTA O ELIMINA AQUESTA LÍNIA */
+
+  /* AFEGEIX AQUESTES DUES LÍNIES */
+  flex-wrap: wrap;
+  align-items: flex-start; /* Alinea els items al principi */
+
+  /* La resta de les teves propietats es queden igual */
+  padding: 12px 20px;
+  cursor: pointer;
+  transition: var(--transition);
+  border-left: 3px solid transparent;
+  white-space: nowrap;
+  position: relative;
+}
+
+aside.expanded+main {
+  margin-left: var(--aside-width);
+}
+
+/* Header */
+header {
+  height: var(--header-height);
+  background-color: var(--bg-color);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 20px;
+  box-shadow: var(--shadow);
+  position: sticky;
+  top: 0;
+  z-index: 99;
+  flex-shrink: 0;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  flex-grow: 1;
+  /* Permet que ocupi l'espai disponible */
+  min-width: 0;
+  max-width: 80%;
+  /* Important per al flexbox */
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex-shrink: 0;
+  /* Evita que s'encongeixi */
+}
+
+.header-icon {
+  font-size: 20px;
+  cursor: pointer;
+  color: var(--text-light);
+  transition: var(--transition);
+  position: relative;
+}
+
+.header-icon:hover {
+  color: var(--primary-color);
+}
+
+.notifications-count {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  background-color: #e74c3c;
+  color: white;
+  border-radius: 50%;
+  width: 18px;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+}
+
+.profile {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  position: relative;
+}
+
+.profile-img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-right: 10px;
+}
+
+.profile-name {
+  font-size: 14px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.profile-dropdown {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background-color: var(--bg-color);
+  border-radius: 5px;
+  box-shadow: var(--shadow);
+  padding: 10px 0;
+  width: 200px;
+  display: none;
+  z-index: 100;
+}
+
+.profile:hover .profile-dropdown {
+  display: block;
+}
+
+.dropdown-item {
+  padding: 10px 20px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.dropdown-item:hover {
+  background-color: var(--secondary-color);
+}
+
+/* Tabs - Versió final amb creus i indicadors */
+.tabs-container {
+  overflow-x: auto;
+  white-space: nowrap;
+  /*scrollbar-width: none;*/
+  flex-grow: 1;
+  padding-bottom: 5px;
+  scroll-behavior: smooth;
+  /* NOU: Perquè el desplaçament amb JS sigui suau */
+}
+
+/* --- ESTILS PER A UNA BARRA DE SCROLL FINA I MINIMALISTA --- */
+
+/* Per a Chrome, Safari, Edge, etc. */
+.tabs-container::-webkit-scrollbar {
+    height: 5px;  /* AQUEST ÉS EL GRUIX DE LA BARRA. Pots posar 3px, 4px, etc. */
+}
+
+.tabs-container::-webkit-scrollbar-track {
+    background: transparent; /* El fons de la barra serà transparent */
+}
+
+.tabs-container::-webkit-scrollbar-thumb {
+    background-color: #cccccc; /* El color de la línia que es mou */
+    border-radius: 10px;       /* Fa les vores de la línia arrodonides */
+}
+
+.tabs-container::-webkit-scrollbar-button {
+    display: none; /* AQUESTA LÍNIA AMAGA LES FLETXES DELS EXTREMS */
+}
+
+/* Per a Firefox */
+.tabs-container {
+    /* ... les altres propietats que ja tenies (overflow-x, etc.) ... */
+    scrollbar-width: thin; /* Això fa que Firefox mostri una barra fina */
+    scrollbar-color: #cccccc transparent; /* Color de la barra i del fons */
+}
+
+.tabs {
+  display: inline-flex;
+  gap: 5px;
+  padding: 10px 5px;
+  padding-bottom:0;
+}
+
+.tab {
+  padding: 8px 15px 8px 12px;
+  background-color: var(--secondary-color);
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: var(--transition);
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+.tab.active {
+  background-color: var(--primary-color);
+  color: white;
+}
+
+.tab:hover:not(.active) {
+  background-color: rgba(74, 107, 223, 0.1);
+}
+
+.tab-close {
+  margin-left: 8px;
+  font-size: 12px;
+  opacity: 0.7;
+  transition: var(--transition);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+}
+
+.tab-close:hover {
+  opacity: 1;
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+.tab.active .tab-close:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+.tab-unsaved {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  width: 8px;
+  height: 8px;
+  background-color: #e74c3c;
+  border-radius: 50%;
+  display: none;
+}
+
+.tab.unsaved .tab-unsaved {
+  display: block;
+}
+
+/* NOU: Estils per a les fletxes de scroll dels tabs */
+.tabs-wrapper {
+  position: relative;
+  flex-grow: 1;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+}
+
+.scroll-arrow {
+  background-color: var(--bg-color);
+  border: none;
+  color: var(--text-light);
+  cursor: pointer;
+  padding: 0 10px;
+  font-size: 14px;
+  height: calc(100% - 10px);
+  /* Alineat amb els tabs */
+  position: absolute;
+  top: 5px;
+  /* Alineat amb els tabs */
+  z-index: 10;
+  display: none;
+  /* Amagades per defecte */
+  align-items: center;
+  transition: var(--transition);
+}
+
+.scroll-arrow:hover {
+  color: var(--primary-color);
+}
+
+.scroll-arrow.left {
+  left: 0;
+  background: linear-gradient(to right, var(--bg-color) 70%, transparent);
+}
+
+.scroll-arrow.right {
+  right: 0;
+  background: linear-gradient(to left, var(--bg-color) 70%, transparent);
+}
+
+/* Content */
+.content {
+  padding: 20px;
+  overflow-y: auto;
+  flex-grow: 1;
+  height: calc(100vh - var(--header-height));
+}
+
+.card {
+  background-color: var(--bg-color);
+  border-radius: 10px;
+  box-shadow: var(--shadow);
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.card-title {
+  font-size: 18px;
+  margin-bottom: 15px;
+  color: var(--primary-color);
+}
+
+/* Modal */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  opacity: 0;
+  visibility: hidden;
+  transition: var(--transition);
+}
+
+.modal.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+.modal-content {
+  background-color: var(--bg-color);
+  border-radius: 10px;
+  width: 90%;
+  max-width: 500px;
+  max-height: 90vh;
+  overflow-y: auto;
+  padding: 20px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.modal-title {
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: var(--text-light);
+}
+
+.setting-option {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 15px 0;
+  border-bottom: 1px solid var(--secondary-color);
+}
+
+.setting-label {
+  font-size: 16px;
+}
+
+.theme-selector {
+  display: flex;
+  gap: 10px;
+}
+
+.theme-option {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  cursor: pointer;
+  border: 2px solid transparent;
+  border-color: lightgray;
+}
+
+.theme-option.active {
+  border-color: var(--primary-color);
+}
+
+.theme-light {
+  background-color: #f8f9fa;
+}
+
+.theme-dark {
+  background-color: #1a202c;
+}
+
+.theme-system {
+  background: linear-gradient(45deg, #f8f9fa 50%, #1a202c 55%);
+  background-repeat: space;
+}
+
+select {
+  padding: 8px 12px;
+  border-radius: 5px;
+  border: 1px solid var(--secondary-color);
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  cursor: pointer;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  aside {
+    transform: translateX(-100%);
+    width: var(--aside-width);
+    z-index: 102;
+  }
+
+  aside.active {
+    transform: translateX(0);
+  }
+
+  aside.expanded {
+    width: var(--aside-width);
+  }
+
+  main {
+    margin-left: 0;
+  }
+
+  .toggle-btn {
+    display: none;
+  }
+
+  .mobile-menu-btn {
+    display: block;
+    font-size: 24px;
+    margin-right: 15px;
+    cursor: pointer;
+  }
+
+  .tabs-wrapper {
+    margin-left: 0;
+  }
+}
+
+@media (min-width: 769px) {
+  .mobile-menu-btn {
+    display: none;
+  }
+}

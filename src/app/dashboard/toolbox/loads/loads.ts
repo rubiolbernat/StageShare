@@ -22,9 +22,14 @@ export class Loads {
   calculatedDistribution: { weight: number; percentage: number }[] = [];
 
   private readonly distributedLoadDistributions: Distributions = {
-    1: [100], 2: [50, 50], 3: [19, 62, 19], 4: [13, 37, 37, 13],
-    5: [10, 28, 24, 28, 10], 6: [8, 23, 19, 19, 23, 8],
-    7: [7, 19, 15, 18, 15, 19, 7], 8: [6, 16, 14, 14, 14, 14, 16, 6]
+    1: [100],
+    2: [50, 50],
+    3: [19, 62, 19],
+    4: [13, 37, 37, 13],
+    5: [10, 28, 24, 28, 10],
+    6: [8, 23, 19, 19, 23, 8],
+    7: [7, 19, 15, 18, 15, 19, 7],
+    8: [6, 16, 14, 14, 14, 14, 16, 6]
   };
 
   private generateSymmetricDistribution(n: number): number[] {
@@ -55,13 +60,15 @@ export class Loads {
     return rounded;
   }
 
-
   /**
    * Actualitza la previsualització cada cop que canvia el formulari.
    */
   onFormChange(): void {
-    this.showResults = false;
+    //this.showResults = false;
     this.updatePreviewPercentages();
+    if (this.totalWeight && this.supportPoints) {
+      this.calculateDistribution();
+    }
   }
 
   /**
@@ -110,7 +117,6 @@ export class Loads {
     this.showResults = true;
   }
 
-
   /**
    * AQUESTA ÉS LA FUNCIÓ CORREGIDA I DEFINITIVA.
    * Garanteix que es crea un array de la mida correcta i es retorna SEMPRE.
@@ -133,12 +139,8 @@ export class Loads {
       distribution[center] = 100;
     }
 
-    console.log('Distribució de càrrega puntual generada:', distribution);
-    console.log('Punts de suport:', points);
     return distribution;
   }
-
-
 
   isCentralPoint(index: number): boolean {
     if (!this.supportPoints || this.loadType !== 'point') return false;

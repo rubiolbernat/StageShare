@@ -35,6 +35,7 @@ div[data-bs-theme="dark"] {
   --bs-primary-dark: var(--primary-dark);
   --bs-secondary: var(--secondary-color);
   --bs-border-color: var(--border-color);
+  color: var(--text-color);
 }
 
 * {
