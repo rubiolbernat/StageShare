@@ -1,4 +1,4 @@
-import { TabService } from './../../../core/services/tab';
+import { TabService } from '../../../core/services/tab-service';
 import { Component, inject } from '@angular/core';
 
 @Component({
