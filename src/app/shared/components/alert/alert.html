@@ -1,1 +1,31 @@
-<p>alert works!</p>
+<div class="alert-container">
+  @for (alert of alerts(); track $index) {
+  <div
+    class="alert alert-{{alert.type}} alert-dismissible fade show"
+    [attr.role]="'alert'"
+  >
+    <div class="d-flex align-items-start">
+      <div class="alert-icon">
+        <i class="bi {{alert.icon}}"></i>
+      </div>
+      <div class="alert-content">
+        <div class="alert-title">{{alert.title}}</div>
+        <div class="alert-message">{{alert.message}}</div>
+      </div>
+      <button
+        type="button"
+        class="btn-close"
+        (click)="close(alert.id)"
+      ></button>
+    </div>
+    <div class="progress">
+      <div
+        class="progress-bar progress-bar-striped progress-bar-animated bg-{{alert.type}}"
+        role="progressbar"
+        style="width: 100%"
+        [style.animation-duration]="(alert.duration || 5000) + 'ms'"
+      ></div>
+    </div>
+  </div>
+  }
+</div>

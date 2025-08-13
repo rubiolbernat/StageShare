@@ -1,0 +1,99 @@
+.alert-container {
+  position: fixed;
+  top: 15px;
+  right: 15px;
+  z-index: 9999;
+  width: 320px; /* abans 380px */
+}
+
+.alert {
+  box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+  margin-bottom: 10px;
+  border-left: 4px solid; /* més prim */
+  border-radius: 4px;
+  overflow: hidden;
+  backdrop-filter: blur(8px);
+  opacity: 0.9;
+  padding: 6px 10px 6px 10px; /* menys padding general */
+  font-size: 0.85rem; /* text més petit */
+}
+
+.alert:hover {
+  opacity: 1;
+}
+
+.alert-content {
+  flex-grow: 1;
+  padding-bottom: 6px; /* marge amb la barra de progrés */
+}
+
+.alert-success {
+  border-left-color: #28a745;
+  background-color: rgba(40, 167, 69, 0.85);
+  color: white;
+}
+
+.alert-info {
+  border-left-color: #17a2b8;
+  background-color: rgba(23, 162, 184, 0.85);
+  color: white;
+}
+
+.alert-warning {
+  border-left-color: #ffc107;
+  background-color: rgba(255, 193, 7, 0.85);
+  color: #212529;
+}
+
+.alert-danger {
+  border-left-color: #dc3545;
+  background-color: rgba(220, 53, 69, 0.85);
+  color: white;
+}
+
+.alert-normal {
+  border-left-color: #e0e0e0;
+  background-color: rgba(255, 255, 255, 0.95);
+  color: #212529;
+}
+
+.progress {
+  height: 3px;
+  border-radius: 0;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
+.progress-bar {
+  height: 100%;
+  animation-name: shrink;
+  animation-timing-function: linear;
+  animation-fill-mode: forwards;
+}
+
+@keyframes shrink {
+  from { width: 100%; }
+  to { width: 0%; }
+}
+
+.alert-icon {
+  font-size: 1.2rem; /* abans 1.5rem */
+  margin-right: 8px;
+  margin-top: 2px;
+}
+
+.alert-title {
+  font-weight: 600;
+  margin-bottom: 2px;
+}
+
+.btn-close {
+  opacity: 0.7;
+  transition: opacity 0.2s;
+}
+
+.btn-close:hover {
+  opacity: 1;
+}

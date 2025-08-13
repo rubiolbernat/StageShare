@@ -1,9 +1,13 @@
-import { Injectable, signal, computed } from '@angular/core';
+import { AlertService } from './alert';
+import { Injectable, signal, computed, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { AppTab } from '../models/app-tab.model';
+import { max } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class TabsService {
+  private alertService = inject(AlertService);
+
   private tabsSignal = signal<AppTab[]>([]);
   private activeTabIdSignal = signal<string | null>(null);
   private tabCounter = 0; // per ID únics quan allowMultiple = true
@@ -19,12 +23,17 @@ export class TabsService {
   }
 
   openTab(tab: AppTab) {
-
-    if (this.tabLenght() >= 10) {
-      console.warn('Maximum number of tabs reached (10). Cannot open more tabs.');
-      alert('⚠️ S’ha arribat al nombre màxim de pestanyes (10). No es poden obrir més pestanyes.');
+    const maxTabs = 10;
+    if (this.tabLenght() >= maxTabs) {
+      console.warn(`Maximum number of tabs reached (${maxTabs}). Cannot open more tabs.`);
+      this.alertService.addAlert({
+        type: 'warning',
+        title: 'Nombre màxim de pestanyes',
+        message: `S’ha arribat al nombre màxim de pestanyes (${maxTabs}). No es poden obrir més pestanyes.`
+      });
       return;
     }
+
     if (!tab.allowMultiple) {
       const existing = this.tabsSignal().find(t => t.id === tab.id || t.route === tab.route);
       if (existing) {
@@ -32,22 +41,31 @@ export class TabsService {
         return;
       }
     } else {
-      const newId = `${tab.id}-${++this.tabCounter}`;
-      tab.id = newId;
+      // Obtenim tots els tabs que comencen amb aquest id base
+      const baseId = tab.id;
+      const matchingTabs = this.tabsSignal().filter(t => t.id === baseId || t.id.startsWith(baseId + '-'));
 
-      // Actualitzar també la ruta per incloure el nou id
-      // Suposant que la ruta original té un segment variable que volem substituir
-      // Per exemple, si la ruta original és '/toolbox/loaddistribution', afegim el nouId
-      // Ajusta segons la teva estructura de rutes
+      if (matchingTabs.length > 0) {
+        // Trobar el número més alt ja usat
+        const maxNumber = matchingTabs
+          .map(t => {
+            const parts = t.id.split('-');
+            const lastPart = parts.length > 1 ? parseInt(parts[parts.length - 1], 10) : 0;
+            return isNaN(lastPart) ? 0 : lastPart;
+          })
+          .reduce((max, n) => Math.max(max, n), 0);
 
-      const baseRoute = tab.route.split('/').slice(0, -1).join('/'); // elimina últim segment si és un id anterior
-      tab.route = `${baseRoute}/${newId}`;
+        tab.id = `${baseId}-${maxNumber + 1}`;
+      }
+
+      // Actualitzar també la ruta
+      const baseRoute = tab.route.split('/').slice(0, -1).join('/');
+      tab.route = `${baseRoute}/${tab.id}`;
     }
 
     this.tabsSignal.update(tabs => [...tabs, tab]);
     this.activateTab(tab.id);
   }
-
 
   closeTab(id: string) {
     const currentTabs = this.tabsSignal();
@@ -130,6 +148,14 @@ export class TabsService {
         console.log(`Tab ${tab.id} is not saved.`);
       }
     });
+    this.alertService.addAlert({
+      type: 'info',
+      title: 'Dades de les pestanyes',
+      message: 'S’ha mostrat la informació de les dades guardades de totes les pestanyes a la consola',
+      duration: 9000
+    });
+
+
   }
 
   tabLenght() {
@@ -152,3 +178,4 @@ export class TabsService {
     );
   }
 }
+
