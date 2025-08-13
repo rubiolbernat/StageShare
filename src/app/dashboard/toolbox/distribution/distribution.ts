@@ -1,6 +1,8 @@
+import { TabsService } from '../../../core/services/tab-service';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-distribution',
@@ -11,7 +13,12 @@ import { FormsModule } from '@angular/forms';
   templateUrl: './distribution.html',
   styleUrl: './distribution.css'
 })
-export class Distribution {
+export class Distribution implements OnInit {
+  private tabsService = inject(TabsService);
+  private route = inject(ActivatedRoute);
+
+  tabId = '';
+
   segmentLength: number = 10;
   objectCount: number = 5;
   distributionType: string = 'individual';
@@ -28,6 +35,48 @@ export class Distribution {
   centerObjectInfo: { label: string; description: string; distanceToCenter: string; } | null = null;
 
   abs = Math.abs;
+
+  ngOnInit() {
+    this.tabId = this.route.snapshot.paramMap.get('id') || '';
+    const savedState = this.tabsService.getTabData(this.tabId);
+
+    if (savedState) {
+      this.segmentLength = savedState.segmentLength;
+      this.objectCount = savedState.objectCount;
+      this.distributionType = savedState.distributionType;
+      this.startFrom = savedState.startFrom;
+      this.direction = savedState.direction;
+      this.includeEdges = savedState.includeEdges;
+      this.marginStart = savedState.marginStart;
+      this.marginEnd = savedState.marginEnd;
+      this.showCenterMeasurements = savedState.showCenterMeasurements;
+      this.results = savedState.results;
+      this.spacing = savedState.spacing;
+      this.centerObjectInfo = savedState.centerObjectInfo;
+    }
+  }
+
+  public saveState() {
+    if (!this.tabId) return;
+    this.tabsService.setTabTitle(this.tabId, `Distr: ${this.segmentLength}m, ${this.objectCount} obj`);
+    this.tabsService.setTabInfo(this.tabId, `Distribució de ${this.objectCount} objectes en un segment de ${this.segmentLength} metres. Cada objecte a ${this.spacing.toFixed(2)} m.`);
+    this.tabsService.updateTabData(this.tabId, {
+      segmentLength: this.segmentLength,
+      objectCount: this.objectCount,
+      distributionType: this.distributionType,
+      startFrom: this.startFrom,
+      direction: this.direction,
+      includeEdges: this.includeEdges,
+      marginStart: this.marginStart,
+      marginEnd: this.marginEnd,
+      showCenterMeasurements: this.showCenterMeasurements,
+      results: this.results,
+      spacing: this.spacing,
+      centerObjectInfo: this.centerObjectInfo
+    });
+
+    this.tabsService.markSaved(this.tabId, true);
+  }
 
   validateDistribution() {
     if (this.distributionType === "pares" && this.objectCount % 2 !== 0) {
@@ -154,5 +203,6 @@ export class Distribution {
         distanceToCenter: Math.abs(centerLeftPos - geometricCenter).toFixed(2)
       };
     }
+    this.saveState();
   }
 }

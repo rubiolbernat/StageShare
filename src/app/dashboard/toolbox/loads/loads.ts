@@ -1,6 +1,8 @@
-import { Component } from '@angular/core';
+import { TabsService } from './../../../core/services/tab-service';
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 
 interface Distributions {
   [key: number]: number[];
@@ -12,7 +14,12 @@ interface Distributions {
   templateUrl: './loads.html',
   styleUrl: './loads.css'
 })
-export class Loads {
+export class Loads implements OnInit {
+  private tabsService = inject(TabsService);
+  private route = inject(ActivatedRoute);
+
+  tabId = '';
+
   totalWeight: number | null = null;
   supportPoints: number | null = null;
   loadType: 'distributed' | 'point' = 'distributed';
@@ -32,48 +39,53 @@ export class Loads {
     8: [6, 16, 14, 14, 14, 14, 16, 6]
   };
 
-  private generateSymmetricDistribution(n: number): number[] {
-    if (n <= 0) return [];
+  ngOnInit() {
+    this.tabId = this.route.snapshot.paramMap.get('id') || '';
 
-    const values = [];
-    const mid = (n - 1) / 2;
-    const offset = 0.2; // mínim pes a extrems, ajustable
+    const savedState = this.tabsService.getTabData(this.tabId);
+    console.log('Loaded state for tab:', this.tabId, savedState);
 
-    for (let i = 0; i < n; i++) {
-      const normalizedDist = 1 - Math.pow((i - mid) / mid, 2);
-      const weight = offset + normalizedDist * (1 - offset);
-      values.push(weight);
+    if (savedState) {
+      this.totalWeight = savedState.totalWeight;
+      this.supportPoints = savedState.supportPoints;
+      this.loadType = savedState.loadType;
+      this.showResults = savedState.showResults;
+      this.previewPercentages = savedState.previewPercentages;
+      this.calculatedDistribution = savedState.calculatedDistribution;
     }
-
-    // Normalitzar a 100%
-    const total = values.reduce((a, b) => a + b, 0);
-    const percentages = values.map(v => (v / total) * 100);
-
-    // Redondejar i ajustar la suma a 100
-    const rounded = percentages.map(p => Math.round(p));
-    const diff = 100 - rounded.reduce((a, b) => a + b, 0);
-    if (diff !== 0) {
-      const center = Math.floor(n / 2);
-      rounded[center] += diff;
-    }
-
-    return rounded;
   }
 
-  /**
-   * Actualitza la previsualització cada cop que canvia el formulari.
-   */
+  private saveState() {
+    // Comprovació per seguretat
+    if (!this.tabId) return;
+
+    const state = {
+      totalWeight: this.totalWeight,
+      supportPoints: this.supportPoints,
+      loadType: this.loadType,
+      showResults: this.showResults,
+      previewPercentages: this.previewPercentages,
+      calculatedDistribution: this.calculatedDistribution
+    };
+
+    // 1. Actualitzes les dades del component (això ja ho feies)
+    this.tabsService.updateTabData(this.tabId, state);
+
+    // 2. Notifiques al servei que la pestanya està oficialment guardada (AQUESTA ÉS LA LÍNIA NOVA)
+    this.tabsService.markSaved(this.tabId, true);
+
+    // El teu log per depurar
+    console.log(`State saved for tab ${this.tabId}:`, state);
+  }
+  
   onFormChange(): void {
-    //this.showResults = false;
     this.updatePreviewPercentages();
     if (this.totalWeight && this.supportPoints) {
-      this.calculateDistribution();
+      this.calculateDistribution(false);
     }
+    this.saveState();
   }
 
-  /**
-   * Funció central per actualitzar l'array de la previsualització.
-   */
   private updatePreviewPercentages(): void {
     if (!this.supportPoints) {
       this.previewPercentages = [];
@@ -84,21 +96,14 @@ export class Loads {
       if (this.supportPoints <= 8) {
         this.previewPercentages = this.distributedLoadDistributions[this.supportPoints] || [];
       } else {
-        // Per a més de 8 punts, generem una distribució simètrica
         this.previewPercentages = this.generateSymmetricDistribution(this.supportPoints);
       }
     } else {
-      // CRIDEM LA VERSIÓ CORREGIDA DE LA FUNCIÓ
       this.previewPercentages = this.getPointLoadDistribution(this.supportPoints);
     }
-    // Per depurar: pots veure a la consola del navegador l'array que es genera
-    console.log('Array de previsualització generat:', this.previewPercentages);
   }
 
-  /**
-   * Calcula els resultats finals basant-se en l'array de previsualització.
-   */
-  calculateDistribution(): void {
+  calculateDistribution(show: boolean = true): void {
     if (!this.totalWeight || !this.supportPoints) {
       alert('Si us plau, introdueix valors vàlids.');
       return;
@@ -111,30 +116,49 @@ export class Loads {
       percentage: p
     }));
 
-    // ✨ Garanteix que hi hagi tots els punts, encara que el pes sigui 0
     this.calculatedDistribution.length = this.supportPoints;
+    this.showResults = show;
 
-    this.showResults = true;
+    this.saveState();
   }
 
-  /**
-   * AQUESTA ÉS LA FUNCIÓ CORREGIDA I DEFINITIVA.
-   * Garanteix que es crea un array de la mida correcta i es retorna SEMPRE.
-   */
+  private generateSymmetricDistribution(n: number): number[] {
+    if (n <= 0) return [];
+
+    const values = [];
+    const mid = (n - 1) / 2;
+    const offset = 0.2;
+
+    for (let i = 0; i < n; i++) {
+      const normalizedDist = 1 - Math.pow((i - mid) / mid, 2);
+      const weight = offset + normalizedDist * (1 - offset);
+      values.push(weight);
+    }
+
+    const total = values.reduce((a, b) => a + b, 0);
+    const percentages = values.map(v => (v / total) * 100);
+
+    const rounded = percentages.map(p => Math.round(p));
+    const diff = 100 - rounded.reduce((a, b) => a + b, 0);
+    if (diff !== 0) {
+      const center = Math.floor(n / 2);
+      rounded[center] += diff;
+    }
+
+    return rounded;
+  }
+
   private getPointLoadDistribution(points: number): number[] {
     if (points <= 0) return [];
 
-    // Genera un array de longitud 'points' amb tots els valors inicialitzats a 0
     const distribution = Array.from({ length: points }, () => 0);
 
     if (points % 2 === 0) {
-      // Si és parell: reparteix 50% als dos punts centrals
       const centerLeft = points / 2 - 1;
       const centerRight = points / 2;
       distribution[centerLeft] = 50;
       distribution[centerRight] = 50;
     } else {
-      // Si és senar: dona 100% al punt central
       const center = Math.floor(points / 2);
       distribution[center] = 100;
     }

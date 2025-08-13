@@ -1,6 +1,7 @@
 import { Component, inject, signal } from '@angular/core';
 import { Router, RouterLinkActive, RouterModule } from '@angular/router';
 import { DashLayoutService } from '../../../core/services/dash-layout-service';
+import { TabsService } from '../../../core/services/tab-service';
 
 @Component({
   selector: 'app-aside',
@@ -11,6 +12,7 @@ import { DashLayoutService } from '../../../core/services/dash-layout-service';
 export class Aside {
   constructor(public router: Router) { }
 
+  private tabsService = inject(TabsService)
   private LayoutService = inject(DashLayoutService)
 
   toggleAside() {
@@ -49,7 +51,7 @@ export class Aside {
     });
   }
 
-  closeSubmenus(){
+  closeSubmenus() {
     this.Submenu.set(Array(this.NSubmenus).fill(false));
   }
 
@@ -57,9 +59,49 @@ export class Aside {
     return this.Submenu()[id]
   }
 
-  leaveAside(){
+  leaveAside() {
     if (!this.LayoutService.getisAside()) {
       this.closeSubmenus();
     }
+  }
+
+
+  // OPENTABS
+  deactivateTab() {
+    this.tabsService.deactivateTabs();
+  }
+
+  openWeightCalculator() {
+    const uniqueId = Date.now();
+    this.tabsService.openTab({
+      id: `${uniqueId}`,
+      route: `/toolbox/loaddistribution/${uniqueId}`, // per tenir ruta única
+      title: `Calculadora`,
+      icon: 'calculator-fill',
+      component: 'CalculatorComponent',
+      allowMultiple: true
+    });
+  }
+
+  openDistributionCalculator() {
+    const uniqueId = Date.now();
+    this.tabsService.openTab({
+      id: `${uniqueId}`,
+      route: `/toolbox/distribution/${uniqueId}`, // per tenir ruta única
+      title: `Distribució`,
+      icon: 'rulers',
+      component: 'Distribution',
+      allowMultiple: true
+    });
+  }
+
+  openProject(id: number) {
+    this.tabsService.openTab({
+      id: `project-${id}`,
+      route: `/project/${id}`,
+      title: `Projecte ${id}`,
+      component: 'ProjectComponent',
+      allowMultiple: false
+    });
   }
 }

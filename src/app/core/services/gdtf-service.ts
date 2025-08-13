@@ -3,7 +3,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { gdtfFixtures, gdtfChannels } from '../models/gdtf_db.model';
 import { Observable } from 'rxjs';
 import { tap, catchError } from 'rxjs/operators';
-import { environment } from '../../../enviorments/environment';
+import { environment } from '../../../environments/environment';
 import { of } from 'rxjs'; // Import 'of' for error handling
 
 @Injectable({

@@ -7,7 +7,7 @@
   (mouseleave)="leaveAside()"
 >
   <div class="logo">
-    <div class="logo-icon" routerLink="/">
+    <div class="logo-icon" routerLink="/" (click)="deactivateTab()">
       <i class="fas"
         ><img src="Stage-Share.png" height="30px" alt="Stage Share Logo"
       /></i>
@@ -41,6 +41,7 @@
       routerLink="/"
       routerLinkActive="active"
       [routerLinkActiveOptions]="{ exact: true }"
+      (click)="deactivateTab()"
     >
       <div class="menu-icon">
         <i class="fas fa-home"
@@ -193,17 +194,18 @@
       <div class="submenu">
         <div
           class="submenu-item"
-          routerLink="/toolbox/distribution"
+          [routerLink]="['/toolbox/distribution']"
           routerLinkActive="active"
-          [routerLinkActiveOptions]="{ exact: true }"
+          (click)="openDistributionCalculator()"
         >
           <div class="submenu-icon"><i class="fas fa-circle"></i></div>
           Distribution tool
         </div>
         <div
           class="submenu-item"
-          routerLink="/toolbox/loaddistribution"
+          [routerLink]="['/toolbox/loaddistribution']"
           routerLinkActive="active"
+          (click)="openWeightCalculator()"
         >
           <div class="submenu-icon"><i class="fas fa-circle"></i></div>
           Weight calculator

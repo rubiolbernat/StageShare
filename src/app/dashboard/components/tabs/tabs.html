@@ -63,3 +63,30 @@
     Equip <span class="tab-close"><i class="fas fa-times"></i></span>
   </div>
 </div>-->
+
+<div class="tabs">
+  @for (tab of tabsService.tabs(); track $index) {
+  <div
+    class="tab"
+    [class.active]="tabsService.isTabActive(tab.id)"
+    [class.unsaved]="tab.canSave && !tab.saved"
+    (click)="activateTab(tab.id)"
+    data-bs-toggle="tooltip"
+    title="{{ tab.info }}"
+  >
+    @if (tab.icon) {
+    <i class="bi bi-{{ tab.icon }}"></i>
+    } &nbsp; {{ tab.title }}
+    <span class="tab-close" (click)="closeTab(tab); $event.stopPropagation()">
+      <i class="bi bi-x-lg"></i>
+    </span>
+    @if (tab.canSave && !tab.saved) {
+    <span class="tab-unsaved"></span>
+    }
+  </div>
+  } @if(!environment.production) {
+  <div class="tab unsaved" (click)="viewdatasaved()">
+    View Data Saved &nbsp; <i class="bi bi-plus-lg"></i>
+  </div>
+  }
+</div>

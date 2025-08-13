@@ -23,10 +23,10 @@ export const DASHBOARD_ROUTES: Routes = [
         path: 'fixturefinder',
         loadComponent: () => import('./fixture-finder/fixture-finder').then(m => m.FixtureFinder)
       }, {
-        path: 'toolbox/distribution',
+        path: 'toolbox/distribution/:id',
         loadComponent: () => import('./toolbox/distribution/distribution').then(m => m.Distribution)
       }, {
-        path: 'toolbox/loaddistribution',
+        path: 'toolbox/loaddistribution/:id',
         loadComponent: () => import('./toolbox/loads/loads').then(m => m.Loads)
       }
     ]

@@ -32,6 +32,12 @@
           },
           "configurations": {
             "production": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.web.ts"
+                }
+              ],
               "budgets": [
                 {
                   "type": "initial",
@@ -50,6 +56,14 @@
               "optimization": false,
               "extractLicenses": false,
               "sourceMap": true
+            },
+            "msi": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.msi.ts"
+                }
+              ]
             }
           },
           "defaultConfiguration": "production"
@@ -62,6 +76,9 @@
             },
             "development": {
               "buildTarget": "StageShare:build:development"
+            },
+            "msi": {
+              "buildTarget": "StageShare:build:msi"
             }
           },
           "defaultConfiguration": "development"

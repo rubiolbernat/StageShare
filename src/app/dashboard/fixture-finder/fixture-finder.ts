@@ -3,7 +3,7 @@ import { GdtfDataService } from '../../core/services/gdtf-service';
 import { gdtfFixtures, gdtfMode, gdtfChannels } from '../../core/models/gdtf_db.model';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { environment } from '../../../enviorments/environment.msi';
+import { environment } from '../../../environments/environment.msi';
 
 @Component({
   selector: 'app-fixture-finder',
