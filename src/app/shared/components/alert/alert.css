@@ -89,11 +89,12 @@
   margin-bottom: 2px;
 }
 
-.btn-close {
+.btn-closed {
+  color: var(--text-color);
   opacity: 0.7;
   transition: opacity 0.2s;
 }
 
-.btn-close:hover {
+.btn-closed:hover {
   opacity: 1;
 }

@@ -121,6 +121,7 @@ function updateGdtfDB($conn)
   $inserted = 0;
   $updated = 0;
   $errors = 0;
+  $errornames = [];
 
   foreach ($data['list'] as $item) {
     $apiLastModified = $item['lastModified'] ?? 0;
@@ -297,6 +298,7 @@ function updateGdtfDB($conn)
         }
         error_log("ERROR RID $rid: " . $e->getMessage());
         $errors++;
+        $errornames[] = $item['fixture'] ?? "Unknown Fixture";
       }
     }
   }
@@ -306,7 +308,8 @@ function updateGdtfDB($conn)
     'inserted' => $inserted,
     'updated' => $updated,
     'errors' => $errors,
-    'message' => "Procés completat. Inserits: $inserted, Actualitzats: $updated, Errors: $errors"
+    'message' => "Procés completat. Inserits: $inserted, Actualitzats: $updated, Errors: $errors",
+    'errornames' => $errornames
   ]);
 }
 

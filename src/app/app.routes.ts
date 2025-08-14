@@ -1,11 +1,11 @@
 import { Routes } from '@angular/router';
 
 export const routes: Routes = [{
-  path: 'land',
+  path: '',
   loadChildren: () => import('./landing/landing.routes').then(m => m.LANDING_ROUTES),
   pathMatch: 'prefix'
 }, {
-  path: '',
+  path: 'd',
   loadChildren: () => import('./dashboard/dashboard.routes').then(m => m.DASHBOARD_ROUTES),
   pathMatch: 'prefix'
 }, {

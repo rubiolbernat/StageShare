@@ -29,12 +29,13 @@
 }
 
 div[data-bs-theme="dark"] {
-  --bs-body-bg: var(--bg-color);
-  --bs-body-color: var(--text-color);
+  --bs-body-bg: var(--bg-color) !important;
+  --bs-body-color: var(--text-color) !important;
   --bs-primary: var(--primary-color);
   --bs-primary-dark: var(--primary-dark);
   --bs-secondary: var(--secondary-color);
   --bs-border-color: var(--border-color);
+  --bs-background: var(--bg-color);
   color: var(--text-color);
 }
 

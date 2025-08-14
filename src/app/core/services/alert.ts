@@ -55,4 +55,8 @@ export class AlertService {
       default: return 'bi-bell-fill';
     }
   }
+
+  success(title: string, message: string = '', icon?: string, duration?: number) {
+    this.addAlert({ type: 'success', title, message, icon, duration });
+  }
 }

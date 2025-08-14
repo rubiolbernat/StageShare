@@ -2,14 +2,22 @@ import { Routes } from "@angular/router";
 import { LandingLayout } from "../layout/landing-layout/landing-layout";
 import { HomePage } from "./home-page/home-page";
 
-export const LANDING_ROUTES: Routes =[
+export const LANDING_ROUTES: Routes = [
   {
     path: '',
     component: LandingLayout,
-    children:[
+    children: [
       {
-        path: 'test',
+        path: '',
         component: HomePage
+      }/*,
+      {
+        path: 'login',
+        component: loginPage
+      }*/,
+      {
+        path: 'legal',
+        loadComponent: () => import('./legal/legal').then(m => m.Legal)
       }
     ]
   }
