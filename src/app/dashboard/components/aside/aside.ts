@@ -1,3 +1,4 @@
+import { DASHBOARD_PREFIX } from './../../../app.routes';
 import { Component, inject, signal } from '@angular/core';
 import { Router, RouterLinkActive, RouterModule } from '@angular/router';
 import { DashLayoutService } from '../../../core/services/dash-layout-service';
@@ -10,10 +11,13 @@ import { TabsService } from '../../../core/services/tab-service';
   styleUrl: './aside.css'
 })
 export class Aside {
-  constructor(public router: Router) { }
 
   private tabsService = inject(TabsService)
   private LayoutService = inject(DashLayoutService)
+
+  constructor(public router: Router) {
+    this.tabsService.setRoutePrefix(DASHBOARD_PREFIX);
+   }
 
   toggleAside() {
     this.LayoutService.toggleAside();
@@ -75,7 +79,7 @@ export class Aside {
     const uniqueId = Date.now();
     this.tabsService.openTab({
       id: `${uniqueId}`,
-      route: `/toolbox/loaddistribution/${uniqueId}`, // per tenir ruta única
+      route: `toolbox/loaddistribution/${uniqueId}`, // per tenir ruta única
       title: `Calculadora`,
       icon: 'calculator-fill',
       component: 'CalculatorComponent',
@@ -87,7 +91,7 @@ export class Aside {
     const uniqueId = Date.now();
     this.tabsService.openTab({
       id: `${uniqueId}`,
-      route: `/toolbox/distribution/${uniqueId}`, // per tenir ruta única
+      route: `toolbox/distribution/${uniqueId}`, // per tenir ruta única
       title: `Distribució`,
       icon: 'rulers',
       component: 'Distribution',

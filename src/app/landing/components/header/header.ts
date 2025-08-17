@@ -16,7 +16,7 @@ export class Header {
       title: 'Welcome to the Dashboard',
       message: 'You can now access your dashboard to manage your projects and settings.',
       icon: 'bi-person-raised-hand',
-      duration: 10500 // 1.5 seconds
+      duration: 1000 // 1.5 seconds
     });
   }
 }

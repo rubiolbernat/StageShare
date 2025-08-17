@@ -1,11 +1,12 @@
 import { AlertService } from './alert';
-import { Injectable, signal, computed, inject } from '@angular/core';
+import { Injectable, signal, computed, inject, input } from '@angular/core';
 import { Router } from '@angular/router';
 import { AppTab } from '../models/app-tab.model';
-import { max } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class TabsService {
+  private routeprefix!: string;
+
   private alertService = inject(AlertService);
 
   private tabsSignal = signal<AppTab[]>([]);
@@ -17,6 +18,14 @@ export class TabsService {
   activeTab = computed(() => this.tabsSignal().find(t => t.id === this.activeTabIdSignal()) || null);
 
   constructor(private router: Router) { }
+
+  setRoutePrefix(prefix: string) {
+    this.routeprefix = prefix;
+  }
+
+  getRoutePrefix() {
+    return this.routeprefix;
+  }
 
   deactivateTabs() {
     this.activeTabIdSignal.set(null);
@@ -61,6 +70,12 @@ export class TabsService {
       // Actualitzar també la ruta
       const baseRoute = tab.route.split('/').slice(0, -1).join('/');
       tab.route = `${baseRoute}/${tab.id}`;
+    }
+
+    // Afegir el prefix si existeix
+    if (this.routeprefix) {
+      // Evitar doble barra
+      tab.route = `${this.routeprefix.replace(/\/$/, '')}/${tab.route.replace(/^\//, '')}`;
     }
 
     this.tabsSignal.update(tabs => [...tabs, tab]);
