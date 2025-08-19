@@ -115,12 +115,12 @@
 
                   <!-- Name -->
                   <div class="col-md-4 col-sm-12">
-                    <label class="form-label small">Name (optional)</label>
+                    <label class="form-label small">Geometry (optional)</label>
                     <input
                       type="text"
                       class="form-control channel-name"
                       placeholder="e.g. Dimmer, Pan"
-                      [(ngModel)]="item.name"
+                      [(ngModel)]="item.geometry"
                       [name]="'channel_name_' + $index"
                     />
                   </div>
@@ -260,7 +260,7 @@
                       >{{ fixture.modes?.length || 0 }} modes</span
                     >
                   </td>
-                  <td >
+                  <td>
                     <button
                       class="btn view-btn btn-sm bg-primary text-white"
                       (click)="openDetailsModal(fixture)"
@@ -412,24 +412,20 @@
                 <thead>
                   <tr>
                     <th>Channel</th>
-                    <th>Name</th>
                     <th>Attribute</th>
-                    <th>Type</th>
+                    <th>Geometry</th>
                   </tr>
                 </thead>
                 <tbody>
                   @for (channel of mode.channels; track channel.id) {
                   <tr>
                     <td>{{ channel.channel_number }}</td>
-                    <td>{{ channel.name }}</td>
                     <td>
                       <span class="badge bg-secondary"
                         >{{ channel.attribute }}</span
                       >
                     </td>
-                    <td>
-                      <small class="text-muted">{{ channel.attribute }}</small>
-                    </td>
+                    <td>{{ channel.geometry }}</td>
                   </tr>
                   }
                 </tbody>

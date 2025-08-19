@@ -20,7 +20,7 @@ export class FixtureFinder {
   searchName = signal<string>('');
   searchManufacturer = signal<string>('');
   searchCreator = signal<string>('');
-  searchByChannels = signal<gdtfChannels[]>([{ channel_number: null, attribute: '', name: '' }]);
+  searchByChannels = signal<gdtfChannels[]>([{ channel_number: null, attribute: '', geometry: '' }]);
 
   // Signals for results and UI state
   searchResults = signal<gdtfFixtures[]>([]);
@@ -68,7 +68,7 @@ export class FixtureFinder {
   // Perform channel search
   performChannelSearch() {
     const channelConditions = this.searchByChannels().filter(channel =>
-      channel.channel_number || channel.attribute || channel.name
+      channel.channel_number || channel.attribute || channel.geometry
     );
 
     if (channelConditions.length === 0) {

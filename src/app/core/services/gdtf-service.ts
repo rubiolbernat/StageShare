@@ -10,7 +10,7 @@ import { of } from 'rxjs'; // Import 'of' for error handling
   providedIn: 'root'
 })
 export class GdtfDataService {
-  private apiUrl = environment.apiUrl + "/gdtf/gdtf_api.php";
+  private apiUrl = environment.apiUrl + "gdtf/gdtf_api.php";
 
   constructor(private http: HttpClient) { }
 
@@ -55,7 +55,7 @@ export class GdtfDataService {
   }
 
   searchByChannels(channels: gdtfChannels[]): Observable<gdtfFixtures[]> {
-    const validChannels = channels.filter(c => c.channel_number || c.attribute || c.name);
+    const validChannels = channels.filter(c => c.channel_number || c.attribute || c.geometry);
     const url = `${this.apiUrl}?action=getFixturesByChannels`;
     const payload = { channels: validChannels };
 

@@ -29,7 +29,7 @@ function fetchFullFixturesByIds(PDO $conn, array $fixtureIds): array // <-- CANV
             f.id AS fixture_id, f.rid, f.name AS fixture_name, f.manufacturer, f.revision, f.creation_date,
             f.last_modified, f.uploader, f.rating, f.version, f.creator, f.uuid, f.filesize, f.thumbnail,
             m.id AS mode_id, m.name AS mode_name, m.description AS mode_description, m.dmx_footprint,
-            c.id AS channel_id, c.channel_number, c.name AS channel_name, c.attribute
+            c.id AS channel_id, c.channel_number, c.geometry AS geometry, c.attribute
         FROM
             gdtf_fixtures f
         LEFT JOIN
@@ -88,7 +88,7 @@ function fetchFullFixturesByIds(PDO $conn, array $fixtureIds): array // <-- CANV
         'id' => (int) $channelId,
         'mode_id' => (int) $modeId,
         'channel_number' => (int) $row['channel_number'],
-        'name' => $row['channel_name'],
+        'geometry' => $row['geometry'],
         'attribute' => $row['attribute']
       ];
     }

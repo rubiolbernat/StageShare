@@ -1,6 +1,7 @@
 <?php
 // ATENCIÓ: Assegura't que la ruta a dbconnect.php és correcta
 require_once('../../dbconnect.php');
+require_once('../../priv_credentials.php');
 
 // --- Configuració ---
 define('GDTF_UPLOAD_DIR', 'C:/xampp/htdocs/StageShare/assets/uploads/gdtf/');
@@ -10,9 +11,14 @@ define('GDTF_LOGIN_URL', 'https://gdtf-share.com/apis/public/login.php');
 define('SESSION_FILE', __DIR__ . '/session.txt');
 
 // --- Credencials ---
-// És recomanable usar variables d'entorn en producció
-define('GDTF_USERNAME', 'rubiolbernat'); // Canvia-ho pel teu nom d'usuari
-define('GDTF_PASSWORD', 'boixeto11'); // Canvia-ho per la teva contrasenya
+if (!defined('GDTF_USERNAME') || !defined('GDTF_PASSWORD')) {
+  throw new Exception("Les credencials GDTF no estan definides.");
+}
+
+$dbuser = defined('DB_USER') ? DB_USER : '';
+$dbpassword = defined('DB_PASSWORD') ? DB_PASSWORD : '';
+$dbname = defined('DB_NAME') ? DB_NAME : '';
+$dbhost = defined('DB_HOST') ? DB_HOST : 'localhost';
 
 // Augmenta el límit de temps d'execució per a aquest script d'importació massiva
 set_time_limit(0);
@@ -262,11 +268,11 @@ function updateGdtfDB($conn)
                 $byteSize = count($offsets);
                 $attribute = isset($dmxChannel->LogicalChannel[0]) ? (string) ($dmxChannel->LogicalChannel[0]['Attribute'] ?? 'Undefined') : 'Undefined';
                 $channelName = (string) ($dmxChannel['Name'] ?? $attribute);
+                $geometry = (string) ($dmxChannel['Geometry'] ?? '');
 
                 foreach ($offsets as $i => $channelOffset) {
                   $isFine = ($i > 0);
                   $finalAttribute = $attribute;
-                  $finalName = $channelName;
 
                   if ($isFine) {
                     $suffix = match ($byteSize) {
@@ -276,11 +282,10 @@ function updateGdtfDB($conn)
                       default => ' (Fine ' . ($i) . ')'
                     };
                     $finalAttribute .= $suffix;
-                    $finalName .= $suffix;
                   }
 
-                  $stmtInsertChannel = $conn->prepare("INSERT INTO gdtf_channels (mode_id, channel_number, name, attribute) VALUES (?, ?, ?, ?)");
-                  $stmtInsertChannel->execute([$modeId, (int) $channelOffset, $finalName, $finalAttribute]);
+                  $stmtInsertChannel = $conn->prepare("INSERT INTO gdtf_channels (mode_id, channel_number, attribute, geometry) VALUES (?, ?, ?, ?)");
+                  $stmtInsertChannel->execute([$modeId, (int) $channelOffset, $finalAttribute, $geometry]);
                 }
               }
             }
@@ -495,12 +500,11 @@ function importSingleGdtfByRid($conn, $rid)
             $offsets = explode(',', (string) $dmxChannel['Offset']);
             $byteSize = count($offsets);
             $attribute = isset($dmxChannel->LogicalChannel[0]) ? (string) ($dmxChannel->LogicalChannel[0]['Attribute'] ?? 'Undefined') : 'Undefined';
-            $channelName = (string) ($dmxChannel['Name'] ?? $attribute);
+            $geometry = (string) ($dmxChannel['Geometry'] ?? '');
 
             foreach ($offsets as $i => $channelOffset) {
               $isFine = ($i > 0);
               $finalAttribute = $attribute;
-              $finalName = $channelName;
 
               if ($isFine) {
                 $suffix = match ($byteSize) {
@@ -510,7 +514,6 @@ function importSingleGdtfByRid($conn, $rid)
                   default => ' (Fine ' . ($i) . ')'
                 };
                 $finalAttribute .= $suffix;
-                $finalName .= $suffix;
               }
 
               // Verifiquem si el canal ja existeix abans d'inserir
@@ -518,8 +521,8 @@ function importSingleGdtfByRid($conn, $rid)
               $stmtCheck->execute([$modeId, (int) $channelOffset]);
 
               if (!$stmtCheck->fetch()) {
-                $stmtInsertChannel = $conn->prepare("INSERT INTO gdtf_channels (mode_id, channel_number, name, attribute) VALUES (?, ?, ?, ?)");
-                $stmtInsertChannel->execute([$modeId, (int) $channelOffset, $finalName, $finalAttribute]);
+                $stmtInsertChannel = $conn->prepare("INSERT INTO gdtf_channels (mode_id, channel_number, attribute, geometry) VALUES (?, ?, ?, ?)");
+                $stmtInsertChannel->execute([$modeId, (int) $channelOffset, $finalAttribute, $geometry]);
               }
             }
           }
